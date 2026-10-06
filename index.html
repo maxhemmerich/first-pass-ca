@@ -99,6 +99,8 @@
   .bar-track{height:8px;background:var(--rule2);position:relative}
   .bar-fill{position:absolute;inset:0 auto 0 0;background:var(--accent)}
   .bar-fill.red{background:var(--red)}
+  .bar-legend{font-size:12px;color:var(--muted);margin:14px 0 0;max-width:74ch}
+  .bar-legend b{color:var(--ink);font-weight:400}
   @media (max-width:640px){
     .row{grid-template-columns:1fr 74px;gap:10px}
     .row .bar-track{grid-column:1 / -1;margin-top:4px}
@@ -134,6 +136,7 @@
   .toc .i{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
   .toc .pg{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
   .toc .t em{display:block;font-style:normal;color:var(--muted);font-size:13px}
+  .paid-foot{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1px solid var(--rule)}
 
   /* ---- price ---- */
   .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
@@ -204,10 +207,10 @@
         <span class="chip miss">Power Automate*</span>
       </div>
       <div class="kv"><i>rows on this form</i><span>41</span></div>
-      <div class="kv"><i>required fields</i><span>123</span></div>
-      <div class="kv"><i>free-text cap</i><span>200 chars</span></div>
+      <div class="kv"><i>required per row</i><span>3</span></div>
+      <div class="kv"><i>free-text cap*</i><span>200 chars</span></div>
     </div>
-    <div class="panel-cap">Illustration of one posting's form. The row count and the 200-character cap are real; the counts shown as “required fields” are an illustration.</div>
+    <div class="panel-cap">Illustration of the form in one Toronto posting: 41 skill rows, each with a required Skill*, Years of experience* and Proficiency* field. Red marks a required row left empty. *The 200-character cap is from a different posting in the sample.</div>
   </div>
 </div></section>
 
@@ -240,11 +243,15 @@
       <div class="n">2<small>/43</small></div><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div></div>
   </div>
 
+  <p class="bar-legend mono">Bars are scaled to the largest count (<b>27 of 43</b>). The four red bars are the questions that can end an application on their own: pay, work status, a stated degree, and whether you can be there.</p>
+
   <div class="pull">
-    <p>One posting in the sample asks for <span class="mono">41</span> skills in a grid, and every row demands its
-      own <span class="mono">Years of experience*</span> and <span class="mono">Proficiency*</span> value. Another asks
-      what technologies you know and stops you at <span class="mono">200 characters</span>. Those two shapes need
-      opposite answers, and neither one is on the employer's careers page.</p>
+    <p>One posting in the sample asks for <span class="mono">41</span> skills in a grid, and every row carries a
+      required <span class="mono">Skill*</span>, <span class="mono">Years of experience*</span> and
+      <span class="mono">Proficiency*</span> value: <span class="mono">123</span> required answers before you write
+      a sentence. Another asks what technologies you know and stops you at
+      <span class="mono">200 characters</span>. Those two shapes need opposite answers, and neither one is on the
+      employer's careers page.</p>
   </div>
 </div></section>
 
@@ -305,6 +312,10 @@
         <li><span class="i">07</span><span class="t">Negotiation for the Canadian market<em>bands, counters, and bonus components</em></span><span class="pg">17–18</span></li>
         <li><span class="i">08</span><span class="t">Reference tables and checklist<em>the full keyword table and the question list</em></span><span class="pg">19–21</span></li>
       </ul>
+      <div class="paid-foot">
+        <button class="btn sm" data-buy>Get the pack</button>
+        <span class="mono" style="color:var(--muted);font-size:11.5px">21-page PDF · $24 CAD</span>
+      </div>
     </div>
   </div>
 </div></section>
@@ -425,10 +436,13 @@ const CONTACT = "maxhemmerich@gmail.com";
     }
   });
   document.querySelectorAll("[data-checkout-note]").forEach(function (n) {
-    n.textContent = live
-      ? "Payment is live. The PDF downloads from the same page after checkout."
-      : "The pack is finished and the free report is live. Payment isn't wired up yet — email " +
-        CONTACT + " and you'll get a download link the same day.";
+    if (live) {
+      n.textContent = "Payment is live. The PDF downloads from the same page after checkout.";
+    } else {
+      n.innerHTML = "The pack is finished and the free report is live. Payment isn't wired up yet " +
+        "\u2014 email <a href=\"mailto:" + CONTACT + "\">" + CONTACT + "</a> and you'll get a " +
+        "download link the same day.";
+    }
   });
 })();
 </script>
