@@ -9,7 +9,7 @@ URL = "https://maxhemmerich.github.io/first-pass-ca/"
 DOC = {
     "title": "Canada Technical Job Search Pack",
     "subtitle": ("The screening questions, the keyword map and the salary|"
-                 "scripts, measured from 141 Canadian technical postings|"
+                 "scripts, measured from 141 Canadian technical postings.|"
                  "21 pages. Data collected 5 October 2026."),
     "subject": "First Pass - Canadian technical job search pack",
     "cover_footer": "",

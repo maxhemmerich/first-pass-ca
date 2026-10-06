@@ -4,8 +4,8 @@
 DOC = {
     "title": "The Screen Report",
     "subtitle": ("What 141 Canadian technical job postings ask|"
-                 "before a person reads your resume|"
-                 "Free sample. The paid pack is 24 pages."),
+                 "before a person reads your resume.|"
+                 "Free sample. The paid pack is 21 pages."),
     "subject": "Measured screening questions from 141 Canadian technical job postings",
     "cover_footer": "",
     "blocks": [

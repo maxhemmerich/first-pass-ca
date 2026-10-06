@@ -158,7 +158,7 @@ def build(doc_spec, path):
         canv.line(54, 52, LETTER[0] - 54, 52)
         canv.setFont("Helvetica", 7.6)
         canv.setFillColor(MUTED)
-        canv.drawString(54, 40, "First Pass / %s / data %s" % (title, DATA_DATE))
+        canv.drawString(54, 40, "First Pass / %s / dataset of %s" % (title, DATA_DATE))
         canv.drawRightString(LETTER[0] - 54, 40, "%d" % doc.page)
         canv.restoreState()
 
