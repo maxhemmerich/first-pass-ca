@@ -1,0 +1,8 @@
+BRIEF.md
+PAYMENT.md
+CLAIM.md
+internal/
+tools/
+pack/__pycache__/
+**/__pycache__/
+*.pyc
