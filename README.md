@@ -5,7 +5,9 @@ questions employers actually ask, the ATS keyword map, and the salary scripts fo
 
 - Live page: https://maxhemmerich.github.io/first-pass-ca/
 - Free report: `downloads/first-pass-free-screen-report.pdf` (8 pages)
-- Paid pack: `downloads/first-pass-canada-tech-pack.pdf` (21 pages, $24 CAD)
+- Paid pack: built locally at `downloads/first-pass-canada-tech-pack.pdf` (21 pages, $24 CAD). It is
+  **not in this repo and not served from it** — the paid file is delivered by the checkout platform,
+  which is why the path above is gitignored and returns 404 on the live site.
 - Generator: `py -3.10 pack/build_pack.py` (reportlab; rebuilds both PDFs byte-identically)
 
 ## Where the numbers come from
