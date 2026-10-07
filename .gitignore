@@ -6,3 +6,5 @@ tools/
 pack/__pycache__/
 **/__pycache__/
 *.pyc
+# The paid pack is delivered by the checkout platform, never from the public site.
+downloads/first-pass-canada-tech-pack.pdf
