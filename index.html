@@ -168,7 +168,7 @@
 <div class="bar"><div class="wrap bar-in">
   <div class="mark">FIRST<b>·</b>PASS</div>
   <div class="bar-meta">
-    <span class="price">CANADA · TECHNICAL ROLES · $24 CAD</span>
+    <span class="price">CANADA · TECHNICAL ROLES · US$18 · CA$25.66</span>
     <button class="btn sm" data-buy>Get the pack</button>
   </div>
 </div></div>
@@ -182,7 +182,7 @@
       questions employers screen on, the keywords that survive the parse, and the salary script that
       works in the Canadian market.</p>
     <div class="buy-row">
-      <button class="btn" data-buy>Get the pack — $24 CAD</button>
+      <button class="btn" data-buy>Get the pack — US$18 (CA$25.66)</button>
       <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Free Screen Report (PDF)</a>
     </div>
     <p class="checkout-note" data-checkout-note></p>
@@ -301,7 +301,7 @@
     </div>
 
     <div class="paid">
-      <div class="paid-head"><h3>The First Pass pack</h3><span class="p mono">$24 CAD</span></div>
+      <div class="paid-head"><h3>The First Pass pack</h3><span class="p mono">US$18 · CA$25.66</span></div>
       <ul class="toc">
         <li><span class="i">01</span><span class="t">How the screen works<em>only what the postings themselves show</em></span><span class="pg">3–4</span></li>
         <li><span class="i">02</span><span class="t">The decision questions<em>ranked, with the answer shape for each</em></span><span class="pg">5–6</span></li>
@@ -314,7 +314,7 @@
       </ul>
       <div class="paid-foot">
         <button class="btn sm" data-buy>Get the pack</button>
-        <span class="mono" style="color:var(--muted);font-size:11.5px">21-page PDF · $24 CAD</span>
+        <span class="mono" style="color:var(--muted);font-size:11.5px">21-page PDF · US$18 (CA$25.66 at checkout)</span>
       </div>
     </div>
   </div>
@@ -351,11 +351,12 @@
   <div class="sec-head"><div class="sec-num">06</div><div><h2>Price</h2></div></div>
   <div class="price-grid">
     <div>
-      <div class="amount">$24 <small>CAD, once</small></div>
+      <div class="amount">US$18 <small>· CA$25.66 at checkout, once</small></div>
       <p style="color:#CFCBC1;margin-top:14px">A 21-page PDF. No subscription, no account, no upsell,
         no email capture.</p>
+      <p class="mono" style="color:var(--muted);font-size:11.5px;margin-top:10px">US$18.00 is the listing price. A Canadian card is charged CA$25.66 at Gumroad's rate on 7 October 2026. Prices checked 7 October 2026.</p>
       <div class="buy-row">
-        <button class="btn" data-buy>Get the pack — $24 CAD</button>
+        <button class="btn" data-buy>Get the pack — US$18 (CA$25.66)</button>
         <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Try the free report first</a>
       </div>
       <p class="checkout-note" data-checkout-note></p>
@@ -407,8 +408,8 @@
     <p>The keyword maps and the screening questions are not country-specific. The salary section and the
       work-authorization section are built for the Canadian market.</p></details>
   <details><summary>Refunds?</summary>
-    <p>Nothing has been sold yet — checkout is not connected. When it is: if the PDF is not what this page
-      says it is, email and it is refunded, no argument.</p></details>
+    <p>If the PDF is not what this page says it is, email and it is
+      refunded, no argument.</p></details>
 </div></section>
 
 <footer><div class="wrap">
@@ -418,7 +419,7 @@
 </div></footer>
 
 <script>
-const CHECKOUT_URL = "https://maxhemmerich.gumroad.com/l/yolqdo";   // one slot. Empty = checkout is not connected yet; nothing pretends to take money.
+const CHECKOUT_URL = "https://maxhemmerich.gumroad.com/l/yolqdo";   // one slot. Empty = no checkout wired; nothing pretends to take money.
 const CONTACT = "maxhemmerich@gmail.com";
 
 (function () {
@@ -426,7 +427,7 @@ const CONTACT = "maxhemmerich@gmail.com";
   const buttons = document.querySelectorAll("[data-buy]");
   buttons.forEach(function (b) {
     if (live) {
-      b.textContent = "Get the pack — $24 CAD";
+      b.textContent = "Get the pack — US$18 (CA$25.66)";
       b.removeAttribute("aria-disabled");
       b.addEventListener("click", function () { window.open(CHECKOUT_URL, "_blank", "noopener"); });
     } else {
@@ -437,7 +438,7 @@ const CONTACT = "maxhemmerich@gmail.com";
   });
   document.querySelectorAll("[data-checkout-note]").forEach(function (n) {
     if (live) {
-      n.textContent = "Payment is live. Checkout takes the card and the PDF is delivered the moment it finishes.";
+      n.textContent = "Payment is live. US$18.00 at checkout — CA$25.66 on a Canadian card at Gumroad's rate on 7 October 2026. The PDF arrives the moment it finishes.";
     } else {
       n.innerHTML = "The pack is finished and the free report is live. Payment isn't wired up yet " +
         "\u2014 email <a href=\"mailto:" + CONTACT + "\">" + CONTACT + "</a> and you'll get a " +
