@@ -185,7 +185,7 @@
       <a class="btn" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack — $24 CAD</a>
       <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Free Screen Report (PDF)</a>
     </div>
-    <p class="checkout-note" data-checkout-note>Payment is live. CA$24 at checkout and the PDF arrives the moment it finishes.</p>
+    <p class="checkout-note" data-checkout-note>Payment is live. CA$24 plus tax at checkout and the PDF arrives the moment it finishes.</p>
     <div class="facts mono">
       <span>141 postings</span><span>43 with screening questions</span><span>25 salary wordings</span><span>Oct 2026</span>
     </div>
@@ -286,17 +286,18 @@
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">04</div><div>
     <h2>What's in the pack</h2>
-    <p class="lede" style="margin-top:12px">The free report and the paid pack are different documents.
-      The free one is not a sample of the paid one.</p>
+    <p class="lede" style="margin-top:12px">The free report is the measured result. The pack is what to do
+      with it. The free one carries the counts, the 25 wordings and the bands; every answer shape and every
+      script is in the pack.</p>
   </div></div>
 
   <div class="two">
     <div class="free">
       <div class="kicker">Free · no email</div>
       <h3 style="margin-top:10px">The Screen Report</h3>
-      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">The measured results on their own, in 8 pages:
-        the ranked screening questions with counts, the 25 salary wordings side by side, what a posting
-        tells you before a human reads anything, and how to answer inside a 200-character limit.</p>
+      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">The measured results on their own, in 6 pages:
+        the ranked screening questions with counts, the 25 salary wordings side by side, and every salary
+        band the postings published. It reports what the postings ask; the answer shapes are in the pack.</p>
       <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Download the Screen Report</a>
     </div>
 
@@ -351,15 +352,16 @@
   <div class="sec-head"><div class="sec-num">06</div><div><h2>Price</h2></div></div>
   <div class="price-grid">
     <div>
-      <div class="amount">$24 CAD <small>once, at checkout</small></div>
-      <p style="color:#CFCBC1;margin-top:14px">A 21-page PDF. No subscription, no account, no upsell,
-        no email capture.</p>
-      <p class="mono" style="color:var(--muted);font-size:11.5px;margin-top:10px">The listing is priced CA$24 on Gumroad. Checked 7 October 2026.</p>
+      <div class="amount">$24 CAD <small>once, plus tax</small></div>
+      <p style="color:#CFCBC1;margin-top:14px">A 21-page PDF. No subscription, no account, no email capture.
+        Gumroad takes the payment and adds the tax for your province — CA$27.11 in Ontario. The checkout page
+        also carries a tip line and a “customers also bought” row; neither is required.</p>
+      <p class="mono" style="color:var(--muted);font-size:11.5px;margin-top:10px">The listing is priced CA$24 on Gumroad. Checked 8 October 2026.</p>
       <div class="buy-row">
         <a class="btn" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack — $24 CAD</a>
         <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Try the free report first</a>
       </div>
-      <p class="checkout-note" data-checkout-note>Payment is live. CA$24 at checkout and the PDF arrives the moment it finishes.</p>
+      <p class="checkout-note" data-checkout-note>Payment is live. CA$24 plus tax at checkout and the PDF arrives the moment it finishes.</p>
     </div>
     <ul class="after">
       <li>The PDF arrives from the checkout page the moment payment clears.</li>
@@ -453,7 +455,7 @@ const CONTACT = "maxhemmerich@gmail.com";
   });
   document.querySelectorAll("[data-checkout-note]").forEach(function (n) {
     if (live) {
-      n.textContent = "Payment is live. CA$24 at checkout and the PDF arrives the moment it finishes.";
+      n.textContent = "Payment is live. CA$24 plus tax at checkout and the PDF arrives the moment it finishes.";
     } else {
       n.innerHTML = "The pack is finished and the free report is live. Payment isn't wired up yet " +
         "\u2014 email <a href=\"mailto:" + CONTACT + "\">" + CONTACT + "</a> and you'll get a " +

@@ -4,7 +4,8 @@ A paid pack for Canadian technical job seekers being screened by automated syste
 questions employers actually ask, the ATS keyword map, and the salary scripts for the Canadian market.
 
 - Live page: https://maxhemmerich.github.io/first-pass-ca/
-- Free report: `downloads/first-pass-free-screen-report.pdf` (8 pages)
+- Free report: `downloads/first-pass-free-screen-report.pdf` (6 pages — the measured result; the answer
+  shapes and scripts are in the paid pack)
 - Paid pack: built locally at `downloads/first-pass-canada-tech-pack.pdf` (21 pages). It is
   **not in this repo and not served from it** — the paid file is delivered by the checkout platform,
   which is why the path above is gitignored and returns 404 on the live site.

@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
-"""Free lead magnet: The Screen Report. Every number is measured (see internal/*.json)."""
+"""Free lead magnet: The Screen Report. Every number is measured (see internal/*.json).
+
+Day 6 (8 October 2026): the how-to-answer material was removed so the free report is the measured
+result only. The anchor-rule scripts and the 200-character template moved out, because the paid
+pack's sections 02 and 05 are built on exactly those answers and were being delivered free. What
+stays is the counted data: the ranked questions, the 25 salary wordings and the published bands.
+"""
 
 DOC = {
     "title": "The Screen Report",
     "subtitle": ("What 141 Canadian technical job postings ask|"
                  "before a person reads your resume.|"
-                 "Free sample. The paid pack is 21 pages."),
+                 "Free. The paid pack is 21 pages."),
     "subject": "Measured screening questions from 141 Canadian technical job postings",
     "cover_footer": "",
     "blocks": [
@@ -133,66 +139,7 @@ DOC = {
                     "77,858, plus a 3-5% performance bonus."),
 
         ("pb",),
-        # ---------------- page 6: the 200-character answer ----------------
-        ("h1", "How to answer inside 200 characters"),
-        ("p", "The cap in this sample reads: <font face='Courier'>What technologies are you proficient in? Answer "
-              "size should be 200 characters or less.</font> Two hundred characters is about 30 words. You cannot "
-              "list fifteen tools and you should not try."),
-        ("h3", "The order that survives a 30-word limit"),
-        ("num", [
-            "The one tool the posting names first.",
-            "The level, in the posting's own vocabulary (proficient, advanced, expert), not in yours.",
-            "Where you used it, as a workplace type rather than a company story.",
-            "One line of proof: how many, how often, for whom.",
-        ]),
-        ("h3", "A template, with the parts you replace"),
-        ("mono", "Power BI (5 years, report author), SQL (advanced, ETL and tuning),"),
-        ("mono", "Python 3 (pandas, reporting automation), Excel (expert, Power Query)."),
-        ("mono", "Built and maintained 20+ recurring reports for operations teams."),
-        ("small", "That is 179 characters. The years and counts are placeholders: put your own measured numbers "
-                  "in, and never write a range you have not worked."),
-        ("h3", "What loses characters for nothing"),
-        ("bul", [
-            "Adjectives: passionate, detail-oriented, results-driven. A parser does not score them. A human "
-            "reads them as noise in a box that was already tight.",
-            "A tool the posting never mentions, taking the slot of one it does.",
-            "Spelling the tool differently from the posting. Use the posting's spelling, character for "
-            "character, in both the form and the resume.",
-            "\u201cFamiliar with\u201d in front of something you have used for years.",
-        ]),
-
-        ("pb",),
-        # ---------------- page 7: anchor rule ----------------
-        ("h1", "The anchor rule"),
-        ("p", "If the posting publishes a band, that band is the target and the ceiling. Answer inside it, above "
-              "the midpoint, with a reason that points at the posting's own requirements. If the posting "
-              "publishes nothing, give a range with a floor you would actually accept, because the form usually "
-              "allows one answer and keeps it."),
-        ("p", "Four lines that do the work. Replace the bracketed parts."),
-        ("mono", "Band published, form asks for one number:"),
-        ("quote", "I am targeting $[number], which sits in the upper half of your posted range of $[band low] to "
-                  "$[band high], based on [the requirement from the posting that you meet]."),
-        ("mono", "Band published, but the number is demanded with no explanation box:"),
-        ("quote", "$[number], within your posted range."),
-        ("mono", "No band published:"),
-        ("quote", "For this scope my range is $[low] to $[high]. Where does the posted band land?"),
-        ("mono", "The band is below your floor:"),
-        ("quote", "The scope here looks closer to [what the role does], and my range starts at $[floor]. If the "
-                  "band is firm, I understand. What flexibility is there on title, bonus, or review date?"),
-        ("h3", "Three bands from this sample, used as anchors"),
-        ("bul", [
-            "$75,000 – $85,000: an analytics role. Midpoint $80,000. Anchor at $82,000 to $84,000.",
-            "$86,379 – $127,288: a wide band, which usually means a level is being placed inside it. Anchor to "
-            "the level you can evidence, not to the top of the range.",
-            "$110,000 – $130,000: a senior data role. Anchor at $120,000 with the requirement you meet named in "
-            "the same sentence.",
-        ]),
-        ("callout", "Never answer a published band with \u201cnegotiable\u201d or \u201copen to discussion\u201d. "
-                    "The employer has published a number and asked you to place yourself beside it. Declining to "
-                    "place yourself moves you to the bottom of the band in every reading of that exchange."),
-
-        ("pb",),
-        # ---------------- page 8: the pack ----------------
+        # ---------------- page 6: the pack ----------------
         ("h1", "What the paid pack adds"),
         ("p", "The Screen Report is the measured result. The pack, <b>First Pass</b>, is 21 pages of what to do "
               "with it: the answer shape for every question in the ranked list, the keyword map by role family, "
@@ -209,7 +156,7 @@ DOC = {
             ["08 Reference", "Full keyword table, question list, one-page checklist", "19-21"],
         ], [116, 268, 40]),
         ("h3", "Where to get it"),
-        ("p", "The pack is CA$24, and the page is <font face='Courier'>%s</font>. The checkout is live: "
+        ("p", "The pack is CA$24 plus tax at checkout, and the page is <font face='Courier'>%s</font>. The checkout is live: "
               "Gumroad takes the card and delivers the pack. Price checked 8 October 2026. Corrections to "
               "its data are welcome." % ("https://maxhemmerich.github.io/first-pass-ca/")),
         ("h3", "Limits, once more, on the last page where you can still read them"),
