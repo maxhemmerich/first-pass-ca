@@ -2,6 +2,11 @@
 """The paid pack: First Pass - Canada Technical Job Search Pack.
 Every number is measured from the 141-posting sample (internal/aggregates.json,
 internal/categories.json). No testimonials, no external statistics, no invented results.
+
+Day 6b (8 October 2026): the reference table's technologies row pointed at "Page 6 of the free
+report", which stopped holding the technologies answer shape when the free report was cut to 6
+pages (its page 6 is now "What the paid pack adds"). The row now points at Section 02, which
+carries that answer shape on p5 ("Technologies, by name - 6 of 43, one capped at 200 characters").
 """
 
 URL = "https://maxhemmerich.github.io/first-pass-ca/"
@@ -533,7 +538,7 @@ DOC = {
             ["Work authorization or sponsorship", "12", "Section 03"],
             ["Years of experience", "10", "Section 02"],
             ["A completed degree", "6", "Section 02"],
-            ["Technologies, by name", "6", "Page 6 of the free report"],
+            ["Technologies, by name", "6", "Section 02"],
             ["Location or commuting distance", "5", "Section 02"],
             ["References or a background check", "4", "Section 02"],
             ["Accommodation requests", "3", "Section 02"],
