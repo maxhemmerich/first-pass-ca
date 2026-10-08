@@ -140,6 +140,14 @@
   .limits li{padding:10px 0;border-bottom:1px solid var(--rule2);color:#CFCBC1;font-size:14.5px}
   .limits li b{color:var(--ink);font-weight:400}
 
+  /* ---- faq ---- */
+  details{border-bottom:1px solid var(--rule2);padding:14px 0}
+  summary{cursor:pointer;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary:after{content:"+";font-family:var(--mono);color:var(--accent)}
+  details[open] summary:after{content:"–"}
+  details p{margin:12px 0 0;color:#CFCBC1;font-size:14.5px;max-width:74ch}
+
   footer{border-top:1px solid var(--rule);padding:30px 0 60px;color:var(--muted);font-size:13px}
   footer .mono{font-size:12px}
   .fnote{margin-top:14px;max-width:70ch}
@@ -189,11 +197,11 @@
 
 <!-- hero -->
 <section class="hero"><div class="wrap">
-  <div class="kicker">Free · no email · 6 pages</div>
-  <h1>The Screen Report<span>.</span></h1>
-  <p class="lede">What 141 Canadian technical job postings ask before a person reads your r&eacute;sum&eacute; — the
-    ranked screening questions, all 20 salary wordings, and every salary band the postings published. This is the
-    free report's content, as a page. Nothing here is from the paid pack.</p>
+  <div class="kicker">The Screen Report · free · no email · 6 pages</div>
+  <h1>What are your salary expectations<span>?</span></h1>
+  <p class="lede">The question 27 of 43 Canadian technical job postings ask — in all 20 of the wordings employers
+    use — plus the ranked screening questions and every salary band the postings published. Measured from 141
+    postings; this is the free report's content, as a page. Nothing here is from the paid pack.</p>
   <div class="buy-row">
     <a class="btn ghost" href="../downloads/first-pass-free-screen-report.pdf">Download the Screen Report (PDF)</a>
     <a class="btn" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack — $24 CAD</a>
@@ -207,7 +215,7 @@
 <!-- 01 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">01</div><div>
-    <h2>What the screen asks first</h2>
+    <h2>What do Canadian technical job postings ask first?</h2>
     <p class="lede" style="margin-top:12px">Counted from the 43 postings that published the employer's own
       screening questions. Nothing here is estimated.</p>
   </div></div>
@@ -248,7 +256,7 @@
 <!-- 02 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">02</div><div>
-    <h2>The same question, 20 wordings</h2>
+    <h2>What are your salary expectations? — the same question, 20 wordings</h2>
     <p class="lede" style="margin-top:12px">Verbatim from the postings that ask about pay, punctuation as
       published. The count on the left is how many postings used that exact wording.</p>
   </div></div>
@@ -290,7 +298,7 @@
 <!-- 03 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">03</div><div>
-    <h2>What the posting tells you before a human reads anything</h2>
+    <h2>What the screening form asks before a human reads anything</h2>
   </div></div>
   <ol class="steps">
     <li><b>The asterisk.</b> Required fields are the first screen. In this sample they are the pay box, the
@@ -312,7 +320,7 @@
 <!-- 04 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">04</div><div>
-    <h2>The published bands in this sample</h2>
+    <h2>What salary bands the postings published</h2>
     <p class="lede" style="margin-top:12px">Quoted from postings that chose to publish a band, so these are
       examples from this sample, not a market range.</p>
   </div></div>
@@ -396,6 +404,33 @@
       </div>
     </div>
   </div>
+</div></section>
+
+<!-- 07 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">07</div><div>
+    <h2>Salary expectations question — job application Canada</h2>
+    <p class="lede" style="margin-top:12px">The three things this page is measured to answer, answered from
+      what is above. No new numbers, no advice the page does not already carry.</p>
+  </div></div>
+
+  <details><summary>How often does a Canadian technical job posting ask about salary?</summary>
+    <p>In this sample, 27 of the 43 postings that published the employer's screening questions ask about pay.
+      That is the most common question of the ten counted, and the same question written 20 different ways.</p></details>
+
+  <details><summary>What is the most common wording of the salary expectations question?</summary>
+    <p>Two wordings are used by 3 postings each — <span class="mono">Please indicate your minimum annual salary
+      expectations (Non-Union positions only):</span> and <span class="mono">What are your salary
+      expectations?</span>. Three more are used by 2 each — <span class="mono">What is your desired pay
+      rate?</span>, <span class="mono">What are your base salary expectations?</span> and <span class="mono">What
+      is your expected salary?</span>. The other 15 appear once each; the full list of 20 is in section 02.</p></details>
+
+  <details><summary>Do the postings publish a salary band?</summary>
+    <p>Some do. Seven annual bands and two hourly rates appear in this sample — from
+      <span class="mono">$45,000 – $55,000</span> up to <span class="mono">$110,000 – $130,000</span> a year,
+      and <span class="mono">$37.47 – $46.84</span> and <span class="mono">$40.49 – $60.73</span> an hour. Most
+      postings publish nothing, so where a band exists it is the number to anchor to. It is a sample of one
+      pipeline, not a market range.</p></details>
 </div></section>
 
 <footer><div class="wrap">
