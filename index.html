@@ -169,7 +169,7 @@
   <div class="mark">FIRST<b>·</b>PASS</div>
   <div class="bar-meta">
     <span class="price">CANADA · TECHNICAL ROLES · $24 CAD</span>
-    <button class="btn sm" data-buy>Get the pack</button>
+    <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
   </div>
 </div></div>
 
@@ -182,10 +182,10 @@
       questions employers screen on, the keywords that survive the parse, and the salary script that
       works in the Canadian market.</p>
     <div class="buy-row">
-      <button class="btn" data-buy>Get the pack — $24 CAD</button>
+      <a class="btn" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack — $24 CAD</a>
       <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Free Screen Report (PDF)</a>
     </div>
-    <p class="checkout-note" data-checkout-note></p>
+    <p class="checkout-note" data-checkout-note>Payment is live. CA$24 at checkout and the PDF arrives the moment it finishes.</p>
     <div class="facts mono">
       <span>141 postings</span><span>43 with screening questions</span><span>25 salary wordings</span><span>Oct 2026</span>
     </div>
@@ -313,7 +313,7 @@
         <li><span class="i">08</span><span class="t">Reference tables and checklist<em>the full keyword table and the question list</em></span><span class="pg">19–21</span></li>
       </ul>
       <div class="paid-foot">
-        <button class="btn sm" data-buy>Get the pack</button>
+        <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
         <span class="mono" style="color:var(--muted);font-size:11.5px">21-page PDF · $24 CAD, once</span>
       </div>
     </div>
@@ -356,10 +356,10 @@
         no email capture.</p>
       <p class="mono" style="color:var(--muted);font-size:11.5px;margin-top:10px">The listing is priced CA$24 on Gumroad. Checked 7 October 2026.</p>
       <div class="buy-row">
-        <button class="btn" data-buy>Get the pack — $24 CAD</button>
+        <a class="btn" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack — $24 CAD</a>
         <a class="btn ghost" href="downloads/first-pass-free-screen-report.pdf">Try the free report first</a>
       </div>
-      <p class="checkout-note" data-checkout-note></p>
+      <p class="checkout-note" data-checkout-note>Payment is live. CA$24 at checkout and the PDF arrives the moment it finishes.</p>
     </div>
     <ul class="after">
       <li>The PDF arrives from the checkout page the moment payment clears.</li>
@@ -423,18 +423,33 @@ const CHECKOUT_URL = "https://maxhemmerich.gumroad.com/l/yolqdo";   // one slot.
 const CONTACT = "maxhemmerich@gmail.com";
 
 (function () {
+  // The static HTML ships the live buy anchor and the live note, so the door works with
+  // JavaScript off. When this script runs it re-renders every buy slot from CHECKOUT_URL:
+  // a live link when it is set, an inert "Checkout not connected yet" button when it is empty.
+  // Keep the static hrefs and CHECKOUT_URL in sync; the slot is the source of truth at runtime.
   const live = typeof CHECKOUT_URL === "string" && CHECKOUT_URL.trim().length > 0;
   const buttons = document.querySelectorAll("[data-buy]");
   buttons.forEach(function (b) {
+    const cls = b.getAttribute("class") || "btn";
+    let replacement;
     if (live) {
-      b.textContent = "Get the pack — $24 CAD";
-      b.removeAttribute("aria-disabled");
-      b.addEventListener("click", function () { window.open(CHECKOUT_URL, "_blank", "noopener"); });
+      replacement = document.createElement("a");
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.href = CHECKOUT_URL.trim();
+      replacement.target = "_blank";
+      replacement.rel = "noopener";
+      replacement.textContent = "Get the pack — $24 CAD";
     } else {
-      b.textContent = "Checkout not connected yet";
-      b.setAttribute("aria-disabled", "true");
-      b.disabled = true;
+      replacement = document.createElement("button");
+      replacement.type = "button";
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.setAttribute("aria-disabled", "true");
+      replacement.disabled = true;
+      replacement.textContent = "Checkout not connected yet";
     }
+    if (b.parentNode) { b.parentNode.replaceChild(replacement, b); }
   });
   document.querySelectorAll("[data-checkout-note]").forEach(function (n) {
     if (live) {
