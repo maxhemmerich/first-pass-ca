@@ -7,6 +7,11 @@ Day 6b (8 October 2026): the reference table's technologies row pointed at "Page
 report", which stopped holding the technologies answer shape when the free report was cut to 6
 pages (its page 6 is now "What the paid pack adds"). The row now points at Section 02, which
 carries that answer shape on p5 ("Technologies, by name - 6 of 43, one capped at 200 characters").
+
+Day 7b (8 October 2026): the pack inherited the free report's "25 wordings" in four places and 25
+was never produced by any rule. The measured, deduped count is 20; the rule is written down in the
+docstring of pack/content_free.py (THE RULE) and is not repeated here. The 27-of-43 figure is a
+different measurement and does not move.
 """
 
 URL = "https://maxhemmerich.github.io/first-pass-ca/"
@@ -27,7 +32,7 @@ DOC = {
             "<b>Read section 01 (pages 3-4).</b> It is the map: what the form decides, what an employer can "
             "see, and where the decision is actually made. Everything else assumes it.",
             "<b>Go to section 05 and answer the salary question properly.</b> 27 of the 43 postings in the "
-            "sample ask about pay, in 25 wordings, usually before a human sees the file. This is the single "
+            "sample ask about pay, in 20 wordings, usually before a human sees the file. This is the single "
             "question most likely to end your application, and the one most people answer badly by reflex.",
             "<b>Do section 04 against the posting you are applying to now.</b> Take the second column, count "
             "how many of those terms appear in your resume. Under ten and the parse has little to work with.",
@@ -39,7 +44,7 @@ DOC = {
             ["02 The decision questions", "Ranked, with the answer shape and the failure mode", "5-6"],
             ["03 Work authorization", "The real wordings, and how to answer them", "7-8"],
             ["04 The keyword map", "By role family, with where each term belongs", "9-11"],
-            ["05 The salary question", "25 wordings, the anchor rule, three scripts", "12-14"],
+            ["05 The salary question", "20 wordings, the anchor rule, three scripts", "12-14"],
             ["06 The screening call", "Twelve questions by level, with the answer shape", "15-16"],
             ["07 Negotiation, Canada", "Bands, counters, bonus components, when to stop", "17-18"],
             ["08 Reference", "Full keyword table, question list, one-page checklist", "19-21"],
@@ -68,7 +73,7 @@ DOC = {
               "one where the answer is yours and where a careless number costs money for as long as you work "
               "there."),
         ("h3", "3. The same question arrives in many shapes"),
-        ("p", "Salary appears in 25 different wordings across 27 postings. Some ask for a minimum, some for a "
+        ("p", "Salary appears in 20 different wordings across 27 postings. Some ask for a minimum, some for a "
               "desired rate, some in USD, one asks for total annual compensation, one asks whether a specific "
               "number works for you. \u201cSalary expectations\u201d is not one question and cannot have one "
               "canned answer."),
@@ -310,7 +315,7 @@ DOC = {
         # ---------------- p16-20: section 05 ----------------
         ("h1", "05. The salary question"),
         ("p", "This is the question that most often ends an application and most often sets the number you live "
-              "on. In the sample it appears in 27 of 43 postings, in 25 wordings, and on 9 posted bands."),
+              "on. In the sample it appears in 27 of 43 postings, in 20 wordings, and on 9 posted bands."),
         ("h2", "The rule, in three parts"),
         ("num", [
             "<b>If the band is published, it is the target and the ceiling.</b> Answer inside it, above the "

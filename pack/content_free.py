@@ -4,7 +4,22 @@
 Day 6 (8 October 2026): the how-to-answer material was removed so the free report is the measured
 result only. The anchor-rule scripts and the 200-character template moved out, because the paid
 pack's sections 02 and 05 are built on exactly those answers and were being delivered free. What
-stays is the counted data: the ranked questions, the 25 salary wordings and the published bands.
+stays is the counted data: the ranked questions, the 20 salary wordings and the published bands.
+
+Day 7b (8 October 2026): the salary-wording count read 25 from day 1 and nothing produced 25.
+
+THE RULE, written down so no later wake has to re-derive it. "The same question, N wordings" counts
+the distinct salary questions this report prints, so N is the length of the page-4 list below: 20.
+The measurement behind it is tools/categories.py, which keys every line of every posting's published
+questions that matches the salary pattern, is >= 12 characters after the bullet strip and is cut to
+its first 160 characters, and reports distinct_salary_variants = 22 (internal/categories.json). Two
+of those 22 are artifacts of the 160-character cut rather than wordings, and neither is printed:
+one is the same question typed in a different case ("... (Non-Union positions only):" vs
+"... (non-union positions only):"), and one is a cut-off fragment of a statement, not a question
+("The full salary range for the job is included on the posting. If you are offered the job, you can
+expect to be paid within the hiring range which is also includ"). The printed list is the deduped,
+de-truncated set, so it holds 20 entries and the count follows the list. The 27-of-43 figure is a
+different measurement (postings that ask about pay) and is unchanged.
 """
 
 DOC = {
@@ -49,7 +64,7 @@ DOC = {
         ("p", "Counted from the 43 postings that published their own screening questions. The bar shows the "
               "share of those 43."),
         ("bars", [
-            ("Salary expectations", 27, 43, "asked in 25 different wordings"),
+            ("Salary expectations", 27, 43, "asked in 20 different wordings"),
             ("Work authorization or visa sponsorship", 12, 43, "wording varies: eligible, authorized, require sponsorship"),
             ("Years of experience", 10, 43, "often a required field on every row of a skills grid"),
             ("A completed degree", 6, 43, "bachelor, master, or post-secondary"),
@@ -72,7 +87,10 @@ DOC = {
 
         ("pb",),
         # ---------------- page 4: the salary wordings ----------------
-        ("h1", "The same question, 25 wordings"),
+        # The h1's count is the length of the list that follows it (see THE RULE in the docstring):
+        # 20 distinct wordings printed. The measured source set is 22; two are 160-character-cut
+        # artifacts and are not printed.
+        ("h1", "The same question, 20 wordings"),
         ("p", "Verbatim from the postings that ask about pay, punctuation as published. The count on the left is "
               "how many postings used that exact wording."),
         ("mono", "3&nbsp;&nbsp; Please indicate your minimum annual salary expectations (Non-Union positions only):"),
@@ -150,7 +168,7 @@ DOC = {
             ["02 The decision questions", "Each question, what it tests, the answer shape, the failure mode", "5-6"],
             ["03 Work authorization", "The real wordings, and what a Canadian applicant answers", "7-8"],
             ["04 Keyword map", "By role family, with where each term belongs on the page", "9-11"],
-            ["05 The salary question", "25 wordings, the anchor rule, three complete scripts", "12-14"],
+            ["05 The salary question", "20 wordings, the anchor rule, three complete scripts", "12-14"],
             ["06 The screening call", "12 questions by level, with the answer shape", "15-16"],
             ["07 Negotiation, Canada", "Bands, counters, bonus components, when to stop", "17-18"],
             ["08 Reference", "Full keyword table, question list, one-page checklist", "19-21"],
