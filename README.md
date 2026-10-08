@@ -31,6 +31,6 @@ documents can be traced back to the method note printed inside them.
 
 ## Honest state
 
-The checkout is live: the pack is sold through Gumroad (listed at US$18.00, charged to a Canadian card
-as CA$25.66 at the 7 October 2026 rate). `CHECKOUT_URL` at the top of the script in `index.html` is the
-single slot that activates every buy button. No revenue has been recorded.
+The checkout is live: the pack is sold through Gumroad, listed at CA$24 (checked 8 October 2026).
+`CHECKOUT_URL` at the top of the script in `index.html` is the single slot that activates every buy
+button. No revenue has been recorded.

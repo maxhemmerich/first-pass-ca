@@ -209,9 +209,9 @@ DOC = {
             ["08 Reference", "Full keyword table, question list, one-page checklist", "19-21"],
         ], [116, 268, 40]),
         ("h3", "Where to get it"),
-        ("p", "The pack is US$18.00, charged as CA$25.66 on a Canadian card at the 7 October 2026 rate, and "
-              "the page is <font face='Courier'>%s</font>. The checkout is live: Gumroad takes the card and "
-              "delivers the pack. Corrections to its data are welcome." % ("https://maxhemmerich.github.io/first-pass-ca/")),
+        ("p", "The pack is CA$24, and the page is <font face='Courier'>%s</font>. The checkout is live: "
+              "Gumroad takes the card and delivers the pack. Price checked 8 October 2026. Corrections to "
+              "its data are welcome." % ("https://maxhemmerich.github.io/first-pass-ca/")),
         ("h3", "Limits, once more, on the last page where you can still read them"),
         ("bul", [
             "141 postings, Ontario-heavy, collected on 5 October 2026. Not a market survey.",
