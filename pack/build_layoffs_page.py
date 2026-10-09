@@ -142,8 +142,8 @@ def main(path):
             % (_html.escape(code), _html.escape(title), cells)
         )
 
-    src_line = ("%s, <em>%s</em> (%s) \\u2014 %s, %s. Read %s. SHA-256 "
-                "<span class=\\\"mono\\\">%s</span>." % (
+    src_line = ("%s, <em>%s</em> (%s) \u2014 %s, %s. Read %s. SHA-256 "
+                "<span class=\"mono\">%s</span>." % (
                     SOURCE["publisher"], SOURCE["table_title"], SOURCE["product_id"],
                     SOURCE["survey"], SOURCE["licence"], SOURCE["read_date"], HASH))
 
