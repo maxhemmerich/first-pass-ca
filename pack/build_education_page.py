@@ -482,7 +482,7 @@ const CONTACT = "maxhemmerich@gmail.com";
       replacement.href = CHECKOUT_URL.trim();
       replacement.target = "_blank";
       replacement.rel = "noopener";
-      replacement.textContent = "Get the pack \\\\u2014 $24 CAD";
+      replacement.textContent = "Get the pack — $24 CAD";
     }} else {{
       replacement = document.createElement("button");
       replacement.type = "button";
