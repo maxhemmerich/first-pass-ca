@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech education in Canada, counted — what each technical occupation studied</title>
+<meta name="description" content="How much education Canada's sixteen technical occupations actually hold and which fields of study they came from, counted by the 2021 Census of Population for each NOC 2021 unit group this site covers — Statistics Canada table 98-10-0447 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.">
+<link rel="canonical" href="https://maxhemmerich.github.io/first-pass-ca/tech-education/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="First Pass">
+<meta property="og:title" content="Tech education in Canada, counted — what each technical occupation studied">
+<meta property="og:description" content="How much education Canada's sixteen technical occupations actually hold and which fields of study they came from, counted by the 2021 Census of Population for each NOC 2021 unit group this site covers — Statistics Canada table 98-10-0447 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.">
+<meta property="og:url" content="https://maxhemmerich.github.io/first-pass-ca/tech-education/">
+<meta property="og:locale" content="en_CA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tech education in Canada, counted — what each technical occupation studied">
+<meta name="twitter:description" content="What Canada's tech workers studied, counted by the 2021 Census: the education behind sixteen technical occupations, from Statistics Canada.">
+<style>
+  :root{
+    --bg:#0B0B0C; --panel:#131316; --panel2:#0F0F12;
+    --ink:#F2F0EA; --muted:#9A968C; --rule:#2A2A2F; --rule2:#1C1C20;
+    --accent:#FFB020; --red:#FF4D3D; --green:#35D07F;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',-apple-system,Helvetica,Arial,sans-serif;
+    --mono:Consolas,'SF Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  a:hover{border-bottom-color:var(--accent)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:pretty}
+  h1{font-size:clamp(34px,7.4vw,62px);line-height:1.03;letter-spacing:-.02em}
+  h2{font-size:clamp(24px,4.2vw,36px);line-height:1.12;letter-spacing:-.01em}
+  h3{font-size:19px;line-height:1.25}
+  p{margin:0 0 14px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+  .bar{position:sticky;top:0;z-index:20;background:rgba(11,11,12,.94);border-bottom:1px solid var(--rule)}
+  .bar-in{display:flex;align-items:center;gap:14px;justify-content:space-between;height:58px}
+  .mark{font-family:var(--mono);font-size:13px;letter-spacing:.2em}
+  .mark b{color:var(--accent);font-weight:400}
+  .bar-meta{display:flex;align-items:center;gap:14px}
+  .bar-meta .price{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  @media (max-width:520px){.bar-meta .price{display:none}}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:0 20px;border:1px solid var(--accent);background:var(--accent);
+    color:#141414;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+    cursor:pointer;border-radius:0;transition:transform .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+  .btn.ghost:hover{border-color:var(--ink)}
+  .btn.sm{min-height:40px;padding:0 14px;font-size:12px}
+
+  section{border-top:1px solid var(--rule);padding:56px 0}
+  .sec-head{display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:baseline;margin-bottom:26px}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em;padding-top:8px}
+  @media (max-width:640px){.sec-head{grid-template-columns:1fr;gap:6px}.sec-num{padding-top:0}}
+
+  .hero{border-top:0;padding-top:44px}
+  .hero h1 span{color:var(--accent)}
+  .lede{color:#CFCBC1;font-size:17px;max-width:62ch;margin-top:18px}
+  .facts{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .facts span{border-right:1px solid var(--rule);padding-right:22px}
+  .facts span:last-child{border-right:0}
+
+  .scroll{overflow-x:auto;border-top:1px solid var(--rule)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--rule2);text-align:left;white-space:nowrap}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1px solid var(--rule);font-weight:600}
+  td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+  td.dim{color:#4A4A50}
+  td.noc{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  td.occ{white-space:normal;min-width:220px;color:#CFCBC1}
+  .tcap{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:14px 0 0;max-width:82ch;white-space:normal}
+
+  .limits{list-style:none;margin:0;padding:0}
+  .limits li{padding:10px 0;border-bottom:1px solid var(--rule2);color:#CFCBC1;font-size:14.5px}
+  .limits li b{color:var(--ink);font-weight:400}
+
+  .pull{margin-top:24px;border:1px solid var(--rule);border-left:2px solid var(--accent);background:var(--panel2);padding:16px}
+  .pull p{margin:0;font-size:14.5px;color:#CFCBC1}
+  .pull .mono{color:var(--ink)}
+
+  .two{display:grid;grid-template-columns:1fr 1.35fr;gap:34px;align-items:start}
+  @media (max-width:820px){.two{grid-template-columns:1fr;gap:24px}}
+  .free{border:1px solid var(--rule);padding:18px;background:var(--panel2)}
+  .paid{border:1px solid var(--rule);padding:0;background:var(--panel)}
+  .paid-head{padding:16px 18px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .paid-head .p{font-family:var(--mono);color:var(--accent);font-size:15px}
+  .paid-foot{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1px solid var(--rule)}
+
+  footer{border-top:1px solid var(--rule);padding:30px 0 60px;color:var(--muted);font-size:13px}
+  footer .mono{font-size:12px}
+  .fnote{margin-top:14px;max-width:70ch}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-education/#article",
+  "url": "https://maxhemmerich.github.io/first-pass-ca/tech-education/",
+  "headline": "Tech education in Canada, counted — what each technical occupation studied",
+  "description": "How much education Canada's sixteen technical occupations actually hold and which fields of study they came from, counted by the 2021 Census of Population for each NOC 2021 unit group this site covers — Statistics Canada table 98-10-0447 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.",
+  "inLanguage": "en-CA",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "First Pass"},
+  "publisher": {"@type": "Organization", "name": "First Pass", "url": "https://maxhemmerich.github.io/first-pass-ca/"},
+  "isPartOf": {"@type": "WebSite", "@id": "https://maxhemmerich.github.io/first-pass-ca/#website", "url": "https://maxhemmerich.github.io/first-pass-ca/", "name": "First Pass"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-education/"},
+  "isBasedOn": {"@type": "Dataset", "name": "Occupation unit group by highest level of education, major field of study, age and gender, table 98-10-0447", "creator": {"@type": "GovernmentOrganization", "name": "Statistics Canada"}, "license": "https://www.statcan.gc.ca/en/reference/licence", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=9810044701"}
+}
+</script>
+</head>
+<body>
+
+<div class="bar"><div class="wrap bar-in">
+  <a class="mark" href="../" style="border-bottom:0">FIRST<b>&middot;</b>PASS</a>
+  <div class="bar-meta">
+    <span class="price">THE PACK &middot; 21 PAGES &middot; CA$24</span>
+    <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
+  </div>
+</div></div>
+
+<!-- hero -->
+<section class="hero"><div class="wrap">
+  <div class="kicker">Canada &middot; 2021 Census &middot; education by occupation</div>
+  <h1>What the people in these jobs actually <span>studied</span></h1>
+  <p class="lede">The rest of this site measures the market around a technical role &mdash; what it
+    pays, how many are open, what the federal model expects, how many have already left. This page
+    measures the people who hold the jobs themselves: how much education the sixteen technical
+    NOC 2021 unit groups this lane covers actually have, and which fields of study they came from.
+    It is the decennial Census of Population, counted by the occupation of the job held, and every
+    figure on it is a count the file itself publishes &mdash; no percentage, no rate, nothing
+    estimated here.</p>
+  <div class="facts mono">
+    <span>16 occupation rows</span><span>counts, not rates</span><span>Statistics Canada</span><span>read 9 October 2026</span>
+  </div>
+</div></section>
+
+<!-- 01 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">01</div><div>
+    <h2>How much education the sixteen technical occupations hold</h2>
+    <p class="lede" style="margin-top:12px">Each cell is a count of people, in Canada, whose job at
+      the census was that occupation and whose highest certificate, diploma or degree fell in that
+      column &mdash; from no certificate at all to a bachelor's degree or higher. Read across a row
+      to see the shape of the field's education; the columns are the file's own education buckets,
+      in the file's own order.</p>
+  </div></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">Total</th><th class="n">No certificate, diploma or degree</th><th class="n">High (secondary) school</th><th class="n">Apprenticeship or trades</th><th class="n">College, CEGEP</th><th class="n">University below bachelor</th><th class="n">Bachelor&#x27;s degree or higher</th></tr></thead>
+    <tbody id="edu-level">
+    <tr><td class="noc">21232</td><td class="occ">Software developers and programmers</td><td class="n">95220</td><td class="n">80</td><td class="n">9220</td><td class="n">385</td><td class="n">11765</td><td class="n">2065</td><td class="n">71710</td></tr>
+    <tr><td class="noc">21231</td><td class="occ">Software engineers and designers</td><td class="n">90570</td><td class="n">60</td><td class="n">6305</td><td class="n">255</td><td class="n">8330</td><td class="n">1655</td><td class="n">73960</td></tr>
+    <tr><td class="noc">21230</td><td class="occ">Computer systems developers and programmers</td><td class="n">44720</td><td class="n">35</td><td class="n">4445</td><td class="n">1030</td><td class="n">12960</td><td class="n">1625</td><td class="n">24625</td></tr>
+    <tr><td class="noc">21211</td><td class="occ">Data scientists</td><td class="n">15420</td><td class="n">0</td><td class="n">755</td><td class="n">40</td><td class="n">640</td><td class="n">205</td><td class="n">13770</td></tr>
+    <tr><td class="noc">21223</td><td class="occ">Database analysts and data administrators</td><td class="n">26225</td><td class="n">15</td><td class="n">2635</td><td class="n">550</td><td class="n">5495</td><td class="n">1125</td><td class="n">16410</td></tr>
+    <tr><td class="noc">21222</td><td class="occ">Information systems specialists</td><td class="n">143475</td><td class="n">55</td><td class="n">11420</td><td class="n">1915</td><td class="n">31635</td><td class="n">6060</td><td class="n">92390</td></tr>
+    <tr><td class="noc">21221</td><td class="occ">Business systems specialists</td><td class="n">32625</td><td class="n">15</td><td class="n">2630</td><td class="n">215</td><td class="n">5225</td><td class="n">1165</td><td class="n">23370</td></tr>
+    <tr><td class="noc">21220</td><td class="occ">Cybersecurity specialists</td><td class="n">15060</td><td class="n">0</td><td class="n">1425</td><td class="n">250</td><td class="n">3785</td><td class="n">775</td><td class="n">8820</td></tr>
+    <tr><td class="noc">21311</td><td class="occ">Computer engineers (except software engineers and designers)</td><td class="n">26730</td><td class="n">0</td><td class="n">1310</td><td class="n">365</td><td class="n">4465</td><td class="n">785</td><td class="n">19805</td></tr>
+    <tr><td class="noc">21234</td><td class="occ">Web developers and programmers</td><td class="n">57665</td><td class="n">35</td><td class="n">7665</td><td class="n">855</td><td class="n">13030</td><td class="n">2455</td><td class="n">33625</td></tr>
+    <tr><td class="noc">21233</td><td class="occ">Web designers</td><td class="n">13695</td><td class="n">15</td><td class="n">3080</td><td class="n">300</td><td class="n">3420</td><td class="n">650</td><td class="n">6235</td></tr>
+    <tr><td class="noc">21210</td><td class="occ">Mathematicians, statisticians and actuaries</td><td class="n">14075</td><td class="n">10</td><td class="n">245</td><td class="n">20</td><td class="n">315</td><td class="n">120</td><td class="n">13365</td></tr>
+    <tr><td class="noc">22220</td><td class="occ">Computer network and web technicians</td><td class="n">70545</td><td class="n">1345</td><td class="n">10955</td><td class="n">3595</td><td class="n">29775</td><td class="n">3175</td><td class="n">21705</td></tr>
+    <tr><td class="noc">22222</td><td class="occ">Information systems testing technicians</td><td class="n">11235</td><td class="n">310</td><td class="n">3060</td><td class="n">450</td><td class="n">3830</td><td class="n">220</td><td class="n">3370</td></tr>
+    <tr><td class="noc">22221</td><td class="occ">User support technicians</td><td class="n">65285</td><td class="n">1230</td><td class="n">12245</td><td class="n">3325</td><td class="n">22760</td><td class="n">2695</td><td class="n">23030</td></tr>
+    <tr><td class="noc">20012</td><td class="occ">Computer and information systems managers</td><td class="n">86235</td><td class="n">795</td><td class="n">7750</td><td class="n">1295</td><td class="n">18295</td><td class="n">3495</td><td class="n">54610</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tcap">Source: Statistics Canada, <em>Occupation unit group by highest level of education, major field of study, age and gender</em> (98-10-0447) — Census of Population, 2021, Statistics Canada Open Licence. Read 2026-10-09. SHA-256 of the archive <span class="mono">580a4dd827810947d42c8ac5b9e10327d8880e7e1c91cfe0208b7983a479c887</span>. The unit is persons. A row's buckets sum to slightly less
+    than its Total because the Census rounds each count independently to the nearest 5; nothing
+    here is summed or adjusted by this page.</p>
+</div></section>
+
+<!-- 02 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">02</div><div>
+    <h2>What the same sixteen occupations studied</h2>
+    <p class="lede" style="margin-top:12px">The same people, counted instead by their major field
+      of study. Seven columns are printed &mdash; the broad fields these roles actually cluster in,
+      named exactly as the file names them, plus the group with no postsecondary credential at all.
+      The file publishes sixty-three fields in all; the ones shown are the ones a reader weighing a
+      technical job would look for first.</p>
+  </div></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">No postsecondary certificate, diploma or degree</th><th class="n">11. Computer and information sciences and support services</th><th class="n">27. Mathematics and statistics</th><th class="n">14. Engineering</th><th class="n">52. Business, management, marketing and related support services</th><th class="n">40. Physical sciences</th><th class="n">Other</th></tr></thead>
+    <tbody id="edu-field">
+    <tr><td class="noc">21232</td><td class="occ">Software developers and programmers</td><td class="n">9295</td><td class="n">41750</td><td class="n">1935</td><td class="n">21680</td><td class="n">4705</td><td class="n">2170</td><td class="n">0</td></tr>
+    <tr><td class="noc">21231</td><td class="occ">Software engineers and designers</td><td class="n">6365</td><td class="n">33325</td><td class="n">1615</td><td class="n">31175</td><td class="n">4550</td><td class="n">1830</td><td class="n">0</td></tr>
+    <tr><td class="noc">21230</td><td class="occ">Computer systems developers and programmers</td><td class="n">4480</td><td class="n">21040</td><td class="n">955</td><td class="n">5515</td><td class="n">2905</td><td class="n">825</td><td class="n">0</td></tr>
+    <tr><td class="noc">21211</td><td class="occ">Data scientists</td><td class="n">760</td><td class="n">3540</td><td class="n">1570</td><td class="n">3035</td><td class="n">1875</td><td class="n">875</td><td class="n">0</td></tr>
+    <tr><td class="noc">21223</td><td class="occ">Database analysts and data administrators</td><td class="n">2650</td><td class="n">7100</td><td class="n">760</td><td class="n">2575</td><td class="n">4040</td><td class="n">520</td><td class="n">0</td></tr>
+    <tr><td class="noc">21222</td><td class="occ">Information systems specialists</td><td class="n">11470</td><td class="n">51480</td><td class="n">2260</td><td class="n">19500</td><td class="n">24565</td><td class="n">2025</td><td class="n">15</td></tr>
+    <tr><td class="noc">21221</td><td class="occ">Business systems specialists</td><td class="n">2650</td><td class="n">6545</td><td class="n">860</td><td class="n">3260</td><td class="n">10600</td><td class="n">440</td><td class="n">0</td></tr>
+    <tr><td class="noc">21220</td><td class="occ">Cybersecurity specialists</td><td class="n">1430</td><td class="n">6475</td><td class="n">140</td><td class="n">1890</td><td class="n">1670</td><td class="n">190</td><td class="n">0</td></tr>
+    <tr><td class="noc">21311</td><td class="occ">Computer engineers (except software engineers and designers)</td><td class="n">1315</td><td class="n">6860</td><td class="n">230</td><td class="n">11665</td><td class="n">1445</td><td class="n">385</td><td class="n">0</td></tr>
+    <tr><td class="noc">21234</td><td class="occ">Web developers and programmers</td><td class="n">7700</td><td class="n">22220</td><td class="n">590</td><td class="n">7615</td><td class="n">4825</td><td class="n">765</td><td class="n">10</td></tr>
+    <tr><td class="noc">21233</td><td class="occ">Web designers</td><td class="n">3095</td><td class="n">2420</td><td class="n">65</td><td class="n">575</td><td class="n">1420</td><td class="n">70</td><td class="n">0</td></tr>
+    <tr><td class="noc">21210</td><td class="occ">Mathematicians, statisticians and actuaries</td><td class="n">255</td><td class="n">140</td><td class="n">3515</td><td class="n">270</td><td class="n">5715</td><td class="n">215</td><td class="n">0</td></tr>
+    <tr><td class="noc">22220</td><td class="occ">Computer network and web technicians</td><td class="n">12300</td><td class="n">28215</td><td class="n">450</td><td class="n">4660</td><td class="n">5365</td><td class="n">640</td><td class="n">0</td></tr>
+    <tr><td class="noc">22222</td><td class="occ">Information systems testing technicians</td><td class="n">3370</td><td class="n">2465</td><td class="n">110</td><td class="n">805</td><td class="n">940</td><td class="n">130</td><td class="n">10</td></tr>
+    <tr><td class="noc">22221</td><td class="occ">User support technicians</td><td class="n">13470</td><td class="n">19935</td><td class="n">355</td><td class="n">4560</td><td class="n">6895</td><td class="n">705</td><td class="n">20</td></tr>
+    <tr><td class="noc">20012</td><td class="occ">Computer and information systems managers</td><td class="n">8545</td><td class="n">24615</td><td class="n">1525</td><td class="n">10555</td><td class="n">18110</td><td class="n">1280</td><td class="n">15</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tcap">The rows do not add to the first table's Total: a person's field of study is
+    recorded for those with a postsecondary credential, so the sixteen columns here are a different
+    slice of the same population, not a breakdown of one number. Read down a column to compare
+    occupations, and across a row to see where one occupation's people came from.</p>
+</div></section>
+
+<!-- 03 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">03</div><div>
+    <h2>What this page counts, and what it does not</h2>
+  </div></div>
+  <ul class="limits">
+    <li><b>One table, one census.</b> Everything above comes from a single Statistics Canada table,
+      <span class="mono">98-10-0447</span>, from the 2021 Census of Population and published under the
+      <a href="https://www.statcan.gc.ca/en/reference/licence">Statistics Canada Open Licence</a>. The CSV read here
+      (<span class="mono">98100447.csv</span>, unpacked from <span class="mono">98100447-eng.zip</span>) hashes to
+      the archive digest <span class="mono">580a4dd827810947d42c8ac5b9e10327d8880e7e1c91cfe0208b7983a479c887</span>; <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=9810044701">the table page</a> and
+      <a href="https://www150.statcan.gc.ca/n1/tbl/csv/98100447-eng.zip">the download</a> are where a reader can confirm every figure.</li>
+    <li><b>Counts, not rates.</b> The file prints counts of people; it does not print a share, and
+      none is derived here. A reader who wants "the percentage with a degree" has to divide two
+      counts this page prints side by side, because that is the only honest way to get one.</li>
+    <li><b>A snapshot of one year.</b> The census is taken once a decade and the 2021 counts describe
+      2021. Fields of study and hiring preferences move between censuses, so treat this as the last
+      measured picture, not this year's.</li>
+    <li><b>The occupation is the job held at the census.</b> A person is counted under the job they
+      were in when the census was taken, so someone who has since moved between fields appears under
+      the old one. This is where people were, not where they are.</li>
+    <li><b>The columns are chosen, the figures are not.</b> Section 02 prints seven of the file's
+      sixty-three fields of study, picked by name because they are the ones these roles cluster in;
+      the choice of columns is this page's, but every count printed is the file's own. Nothing was
+      ranked, averaged, rounded again or converted.</li>
+    <li><b>The picture, and nothing borrowed from the pack.</b> These are counts of occupations in
+      a country rather than of any employer or posting, and the page offers no guidance on what to do
+      with them. Nothing in the paid document feeds a figure here, and no figure here is drawn from it.</li>
+  </ul>
+  <div class="pull">
+    <p>This is the qualification side of the same search. What the roles <em>pay</em> is on the
+      <a href="../tech-salaries/">salary page</a>; how many are <em>open</em> on the
+      <a href="../tech-vacancies-by-occupation/">vacancy page</a>; what the model
+      <em>expects</em> on the <a href="../tech-job-projections/">projection page</a>; and who has
+      <em>left</em> on the <a href="../tech-layoffs/">layoffs page</a>. The whole of the figures
+      above is one open-licensed census table, reproduced with the attribution the licence asks
+      for.</p>
+  </div>
+</div></section>
+
+<!-- 04 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">04</div><div>
+    <h2>Where this sits</h2>
+    <p class="lede" style="margin-top:12px">What the same roles pay, how many are open, what the
+      screen asks and who holds them are the pages beside this one.</p>
+  </div></div>
+  <p style="color:#CFCBC1;font-size:14.5px;margin-bottom:22px">Paid wages by occupation:
+    <a href="../tech-salaries/">tech salaries across Canada &rarr;</a> &middot; the same roles by urban
+    region: <a href="../tech-salaries-by-city/">tech salaries by city &rarr;</a> &middot; the file's
+    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; what
+    employers are trying to fill, by industry: <a href="../job-vacancies-by-industry/">job vacancies by industry &rarr;</a> &middot; the same demand by occupation: <a href="../tech-vacancies-by-occupation/">tech job vacancies by occupation &rarr;</a> &middot; the decade ahead: <a href="../tech-job-projections/">projected technical job openings to 2033 &rarr;</a> &middot; who has already left: <a href="../tech-layoffs/">tech layoffs in Canada, counted &rarr;</a></p>
+  <div class="two">
+    <div class="free">
+      <div class="kicker">Free &middot; no email</div>
+      <h3 style="margin-top:10px">The Screen Report</h3>
+      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">What the postings on the other side
+        of this market actually asked, and every salary band they printed.</p>
+      <a class="btn ghost" href="../free-report/">Read the Screen Report &rarr;</a>
+    </div>
+    <div class="paid">
+      <div class="paid-head"><h3>The First Pass pack</h3><span class="p mono">$24 CAD</span></div>
+      <p style="padding:14px 18px;margin:0;font-size:14.5px;color:#CFCBC1">Knowing what a field
+        studies is not the same as getting through its screen. The pack carries the keyword map for
+        the role, an answer shape for every screening question, three salary scripts and a Canadian
+        negotiation section, in 21 pages.</p>
+      <p style="padding:12px 18px;margin:0;border-top:1px solid var(--rule);font-size:13.5px"><a href="../whats-in-the-pack/">The pack, section by section &rarr;</a></p>
+      <div class="paid-foot">
+        <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
+        <span class="mono" style="color:var(--muted);font-size:11.5px">One PDF &middot; $24 CAD, paid once</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="mono">FIRST PASS &middot; sixteen technical occupations, read 9 October 2026 &middot; <a href="../" style="border-bottom:0">the full page</a> &middot; <a href="../free-report/" style="border-bottom:0">the Screen Report</a></div>
+  <div class="fnote">Education and field-of-study figures are reproduced from Statistics Canada's
+    <em>Census of Population, 2021</em>, published under the <a href="https://www.statcan.gc.ca/en/reference/licence">Statistics Canada Open Licence</a>;
+    this page carries that information with attribution and is neither endorsed by nor affiliated with
+    Statistics Canada. Questions, refunds or corrections:
+    <a href="mailto:maxhemmerich@gmail.com">maxhemmerich@gmail.com</a>. No tracking of individuals, no cookies and no personal data on this site. Page views are counted in aggregate &mdash; one number per page, no identifier.</div>
+</div></footer>
+
+<script>
+const CHECKOUT_URL = "https://maxhemmerich.gumroad.com/l/yolqdo";   // same single slot as the other pages.
+const CONTACT = "maxhemmerich@gmail.com";
+
+(function () {
+  const live = typeof CHECKOUT_URL === "string" && CHECKOUT_URL.trim().length > 0;
+  document.querySelectorAll("[data-buy]").forEach(function (b) {
+    const cls = b.getAttribute("class") || "btn";
+    let replacement;
+    if (live) {
+      replacement = document.createElement("a");
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.href = CHECKOUT_URL.trim();
+      replacement.target = "_blank";
+      replacement.rel = "noopener";
+      replacement.textContent = "Get the pack \\u2014 $24 CAD";
+    } else {
+      replacement = document.createElement("button");
+      replacement.type = "button";
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.setAttribute("aria-disabled", "true");
+      replacement.disabled = true;
+      replacement.textContent = "Checkout not connected yet";
+    }
+    if (b.parentNode) { b.parentNode.replaceChild(replacement, b); }
+  });
+})();
+</script>
+<!-- ALPHA page counter (Abacus — one anonymous hit per load, no cookie, no identifier; reader at /stats/ -->
+<script>
+(function(){try{
+  fetch("https://abacus.jasoncameron.dev/hit/maxhemmerich.github.io/first-pass-ca-tech-education", {mode:"no-cors",cache:"no-store",keepalive:true}).catch(function(){});
+}catch(e){}})();
+</script>
+</body>
+</html>
