@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech layoffs in Canada, counted — EI claimants by technical occupation</title>
+<meta name="description" content="How many people in each Canadian technical occupation are drawing regular Employment Insurance benefits, month by month, for the sixteen NOC 2021 unit groups this site covers — from Statistics Canada's table 14-10-0455 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.">
+<link rel="canonical" href="https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="First Pass">
+<meta property="og:title" content="Tech layoffs in Canada, counted — EI claimants by technical occupation">
+<meta property="og:description" content="How many people in each Canadian technical occupation are drawing regular Employment Insurance benefits, month by month, for the sixteen NOC 2021 unit groups this site covers — from Statistics Canada's table 14-10-0455 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.">
+<meta property="og:url" content="https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/">
+<meta property="og:locale" content="en_CA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tech layoffs in Canada, counted — EI claimants by technical occupation">
+<meta name="twitter:description" content="The other side of a Canadian tech job search, counted: how many people in each technical occupation are on regular EI benefits, month by month, from Statistics Canada.">
+<style>
+  :root{
+    --bg:#0B0B0C; --panel:#131316; --panel2:#0F0F12;
+    --ink:#F2F0EA; --muted:#9A968C; --rule:#2A2A2F; --rule2:#1C1C20;
+    --accent:#FFB020; --red:#FF4D3D; --green:#35D07F;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',-apple-system,Helvetica,Arial,sans-serif;
+    --mono:Consolas,'SF Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  a:hover{border-bottom-color:var(--accent)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:pretty}
+  h1{font-size:clamp(34px,7.4vw,62px);line-height:1.03;letter-spacing:-.02em}
+  h2{font-size:clamp(24px,4.2vw,36px);line-height:1.12;letter-spacing:-.01em}
+  h3{font-size:19px;line-height:1.25}
+  p{margin:0 0 14px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+  .bar{position:sticky;top:0;z-index:20;background:rgba(11,11,12,.94);border-bottom:1px solid var(--rule)}
+  .bar-in{display:flex;align-items:center;gap:14px;justify-content:space-between;height:58px}
+  .mark{font-family:var(--mono);font-size:13px;letter-spacing:.2em}
+  .mark b{color:var(--accent);font-weight:400}
+  .bar-meta{display:flex;align-items:center;gap:14px}
+  .bar-meta .price{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  @media (max-width:520px){.bar-meta .price{display:none}}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:0 20px;border:1px solid var(--accent);background:var(--accent);
+    color:#141414;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+    cursor:pointer;border-radius:0;transition:transform .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+  .btn.ghost:hover{border-color:var(--ink)}
+  .btn.sm{min-height:40px;padding:0 14px;font-size:12px}
+
+  section{border-top:1px solid var(--rule);padding:56px 0}
+  .sec-head{display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:baseline;margin-bottom:26px}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em;padding-top:8px}
+  @media (max-width:640px){.sec-head{grid-template-columns:1fr;gap:6px}.sec-num{padding-top:0}}
+
+  .hero{border-top:0;padding-top:44px}
+  .hero h1 span{color:var(--accent)}
+  .lede{color:#CFCBC1;font-size:17px;max-width:62ch;margin-top:18px}
+  .facts{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .facts span{border-right:1px solid var(--rule);padding-right:22px}
+  .facts span:last-child{border-right:0}
+
+  .scroll{overflow-x:auto;border-top:1px solid var(--rule)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--rule2);text-align:left;white-space:nowrap}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1px solid var(--rule);font-weight:600}
+  td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+  td.dim{color:#4A4A50}
+  td.noc{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  td.occ{white-space:normal;min-width:220px;color:#CFCBC1}
+  .tcap{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:14px 0 0;max-width:82ch;white-space:normal}
+
+  .limits{list-style:none;margin:0;padding:0}
+  .limits li{padding:10px 0;border-bottom:1px solid var(--rule2);color:#CFCBC1;font-size:14.5px}
+  .limits li b{color:var(--ink);font-weight:400}
+
+  .pull{margin-top:24px;border:1px solid var(--rule);border-left:2px solid var(--accent);background:var(--panel2);padding:16px}
+  .pull p{margin:0;font-size:14.5px;color:#CFCBC1}
+  .pull .mono{color:var(--ink)}
+
+  .two{display:grid;grid-template-columns:1fr 1.35fr;gap:34px;align-items:start}
+  @media (max-width:820px){.two{grid-template-columns:1fr;gap:24px}}
+  .free{border:1px solid var(--rule);padding:18px;background:var(--panel2)}
+  .paid{border:1px solid var(--rule);padding:0;background:var(--panel)}
+  .paid-head{padding:16px 18px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .paid-head .p{font-family:var(--mono);color:var(--accent);font-size:15px}
+  .paid-foot{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1px solid var(--rule)}
+
+  footer{border-top:1px solid var(--rule);padding:30px 0 60px;color:var(--muted);font-size:13px}
+  footer .mono{font-size:12px}
+  .fnote{margin-top:14px;max-width:70ch}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/#article",
+  "url": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/",
+  "headline": "Tech layoffs in Canada, counted — EI claimants by technical occupation",
+  "description": "How many people in each Canadian technical occupation are drawing regular Employment Insurance benefits, month by month, for the sixteen NOC 2021 unit groups this site covers — from Statistics Canada's table 14-10-0455 (Statistics Canada Open Licence). Every figure carries its source and the date it was read.",
+  "inLanguage": "en-CA",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "First Pass"},
+  "publisher": {"@type": "Organization", "name": "First Pass", "url": "https://maxhemmerich.github.io/first-pass-ca/"},
+  "isPartOf": {"@type": "WebSite", "@id": "https://maxhemmerich.github.io/first-pass-ca/#website", "url": "https://maxhemmerich.github.io/first-pass-ca/", "name": "First Pass"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/"},
+  "isBasedOn": {"@type": "Dataset", "name": "Employment insurance beneficiaries (regular benefits) by province, territory and occupation, table 14-10-0455", "creator": {"@type": "GovernmentOrganization", "name": "Statistics Canada"}, "license": "https://www.statcan.gc.ca/en/reference/licence", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410045501"}
+}
+</script>
+</head>
+<body>
+
+<div class="bar"><div class="wrap bar-in">
+  <a class="mark" href="../" style="border-bottom:0">FIRST<b>&middot;</b>PASS</a>
+  <div class="bar-meta">
+    <span class="price">THE PACK &middot; 21 PAGES &middot; CA$24</span>
+    <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
+  </div>
+</div></div>
+
+<!-- hero -->
+<section class="hero"><div class="wrap">
+  <div class="kicker">Canada &middot; Employment Insurance &middot; by occupation</div>
+  <h1>Canada's technical layoffs, <span>counted</span></h1>
+  <p class="lede">Every other reference on this site measures the market you are about to enter.
+    This one measures the people who have just left it. It is not a list of announced job cuts;
+    it is the benefit that follows one &mdash; the number of people in each technical occupation
+    drawing <b>regular Employment Insurance</b>, counted by Statistics Canada and broken out by the
+    occupation of the claim. The page prints, for the sixteen technical NOC 2021 unit groups this
+    lane covers, that count at the latest reference period and month by month across the year, each
+    figure the file's own, with the source and the date it was read.</p>
+  <div class="facts mono">
+    <span>16 occupation rows</span><span>monthly, unadjusted</span><span>Statistics Canada</span><span>read 9 October 2026</span>
+  </div>
+</div></section>
+
+<!-- 01 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">01</div><div>
+    <h2>The sixteen technical occupations, at the latest reading</h2>
+    <p class="lede" style="margin-top:12px">Each cell is a count of people, in Canada, receiving
+      regular Employment Insurance benefits on the reference date and recorded under that occupation.
+      Two columns are printed side by side &mdash; the newest month the file carries,
+      <span class="mono">2026-07</span>, and the same month a year earlier,
+      <span class="mono">2025-07</span> &mdash; so the year-on-year direction is visible without
+      anyone having to subtract.</p>
+  </div></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">2026-07 (persons)</th><th class="n">2025-07 (persons)</th></tr></thead>
+    <tbody id="ei-latest">
+    <tr><td class="noc">21232</td><td class="occ">Software developers and programmers</td><td class="n">2600</td><td class="n">2300</td></tr>
+    <tr><td class="noc">21231</td><td class="occ">Software engineers and designers</td><td class="n">3250</td><td class="n">2840</td></tr>
+    <tr><td class="noc">21230</td><td class="occ">Computer systems developers and programmers</td><td class="n">310</td><td class="n">350</td></tr>
+    <tr><td class="noc">21211</td><td class="occ">Data scientists</td><td class="n">700</td><td class="n">620</td></tr>
+    <tr><td class="noc">21223</td><td class="occ">Database analysts and data administrators</td><td class="n">930</td><td class="n">830</td></tr>
+    <tr><td class="noc">21222</td><td class="occ">Information systems specialists</td><td class="n">2880</td><td class="n">2930</td></tr>
+    <tr><td class="noc">21221</td><td class="occ">Business systems specialists</td><td class="n">1680</td><td class="n">1540</td></tr>
+    <tr><td class="noc">21220</td><td class="occ">Cybersecurity specialists</td><td class="n">480</td><td class="n">380</td></tr>
+    <tr><td class="noc">21311</td><td class="occ">Computer engineers (except software engineers and designers)</td><td class="n">550</td><td class="n">470</td></tr>
+    <tr><td class="noc">21234</td><td class="occ">Web developers and programmers</td><td class="n">840</td><td class="n">870</td></tr>
+    <tr><td class="noc">21233</td><td class="occ">Web designers</td><td class="n">100</td><td class="n">70</td></tr>
+    <tr><td class="noc">21210</td><td class="occ">Mathematicians, statisticians and actuaries</td><td class="n">150</td><td class="n">210</td></tr>
+    <tr><td class="noc">22220</td><td class="occ">Computer network and web technicians</td><td class="n">490</td><td class="n">440</td></tr>
+    <tr><td class="noc">22222</td><td class="occ">Information systems testing technicians</td><td class="n">360</td><td class="n">430</td></tr>
+    <tr><td class="noc">22221</td><td class="occ">User support technicians</td><td class="n">2870</td><td class="n">2700</td></tr>
+    <tr><td class="noc">20012</td><td class="occ">Computer and information systems managers</td><td class="n">2240</td><td class="n">1730</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tcap">Source: Statistics Canada, <em>Employment insurance beneficiaries (regular benefits) by province, territory and occupation, monthly, unadjusted for seasonality</em> (14-10-0455) \u2014 Employment Insurance Statistics, Statistics Canada Open Licence. Read 2026-10-09. SHA-256 <span class=\"mono\">87fda59b15269de99e3f6b5f631a50bce412a225b8a36ddf92bffbc13d3a31cf</span>. A person is counted once per month under the occupation of
+    the job they last held; the series is not adjusted for season, so the same month in two different
+    years is the honest comparison, not two months side by side.</p>
+</div></section>
+
+<!-- 02 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">02</div><div>
+    <h2>The same sixteen, month by month</h2>
+    <p class="lede" style="margin-top:12px">Regular-benefit claimants in each of the sixteen unit
+      groups, at every reference period from <span class="mono">2025-08</span> to
+      <span class="mono">2026-07</span> &mdash; the last 12 months the file carries. The column
+      headings are the file's own reference dates; a cell the file suppresses is a dash, not a zero.</p>
+  </div></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">2025-08</th><th class="n">2025-09</th><th class="n">2025-10</th><th class="n">2025-11</th><th class="n">2025-12</th><th class="n">2026-01</th><th class="n">2026-02</th><th class="n">2026-03</th><th class="n">2026-04</th><th class="n">2026-05</th><th class="n">2026-06</th><th class="n">2026-07</th></tr></thead>
+    <tbody id="ei-series">
+    <tr><td class="noc">21232</td><td class="occ">Software developers and programmers</td><td class="n">2250</td><td class="n">2210</td><td class="n">2240</td><td class="n">2210</td><td class="n">2230</td><td class="n">2220</td><td class="n">2190</td><td class="n">2250</td><td class="n">2340</td><td class="n">2490</td><td class="n">2570</td><td class="n">2600</td></tr>
+    <tr><td class="noc">21231</td><td class="occ">Software engineers and designers</td><td class="n">2800</td><td class="n">2780</td><td class="n">2700</td><td class="n">2710</td><td class="n">2770</td><td class="n">2780</td><td class="n">2870</td><td class="n">2850</td><td class="n">2960</td><td class="n">3050</td><td class="n">3170</td><td class="n">3250</td></tr>
+    <tr><td class="noc">21230</td><td class="occ">Computer systems developers and programmers</td><td class="n">350</td><td class="n">340</td><td class="n">340</td><td class="n">340</td><td class="n">330</td><td class="n">330</td><td class="n">320</td><td class="n">320</td><td class="n">310</td><td class="n">320</td><td class="n">320</td><td class="n">310</td></tr>
+    <tr><td class="noc">21211</td><td class="occ">Data scientists</td><td class="n">650</td><td class="n">630</td><td class="n">640</td><td class="n">610</td><td class="n">620</td><td class="n">630</td><td class="n">650</td><td class="n">650</td><td class="n">660</td><td class="n">690</td><td class="n">690</td><td class="n">700</td></tr>
+    <tr><td class="noc">21223</td><td class="occ">Database analysts and data administrators</td><td class="n">830</td><td class="n">800</td><td class="n">800</td><td class="n">850</td><td class="n">870</td><td class="n">880</td><td class="n">880</td><td class="n">890</td><td class="n">900</td><td class="n">910</td><td class="n">890</td><td class="n">930</td></tr>
+    <tr><td class="noc">21222</td><td class="occ">Information systems specialists</td><td class="n">2940</td><td class="n">2980</td><td class="n">3050</td><td class="n">2990</td><td class="n">2950</td><td class="n">2870</td><td class="n">2910</td><td class="n">2840</td><td class="n">2890</td><td class="n">2920</td><td class="n">2840</td><td class="n">2880</td></tr>
+    <tr><td class="noc">21221</td><td class="occ">Business systems specialists</td><td class="n">1590</td><td class="n">1610</td><td class="n">1620</td><td class="n">1640</td><td class="n">1600</td><td class="n">1540</td><td class="n">1620</td><td class="n">1610</td><td class="n">1640</td><td class="n">1690</td><td class="n">1690</td><td class="n">1680</td></tr>
+    <tr><td class="noc">21220</td><td class="occ">Cybersecurity specialists</td><td class="n">380</td><td class="n">390</td><td class="n">410</td><td class="n">410</td><td class="n">410</td><td class="n">410</td><td class="n">420</td><td class="n">430</td><td class="n">450</td><td class="n">490</td><td class="n">480</td><td class="n">480</td></tr>
+    <tr><td class="noc">21311</td><td class="occ">Computer engineers (except software engineers and designers)</td><td class="n">480</td><td class="n">460</td><td class="n">430</td><td class="n">450</td><td class="n">440</td><td class="n">450</td><td class="n">470</td><td class="n">480</td><td class="n">490</td><td class="n">500</td><td class="n">540</td><td class="n">550</td></tr>
+    <tr><td class="noc">21234</td><td class="occ">Web developers and programmers</td><td class="n">880</td><td class="n">890</td><td class="n">880</td><td class="n">890</td><td class="n">840</td><td class="n">810</td><td class="n">820</td><td class="n">820</td><td class="n">830</td><td class="n">860</td><td class="n">810</td><td class="n">840</td></tr>
+    <tr><td class="noc">21233</td><td class="occ">Web designers</td><td class="n">80</td><td class="n">80</td><td class="n">90</td><td class="n">90</td><td class="n">80</td><td class="n">80</td><td class="n">90</td><td class="n">90</td><td class="n">100</td><td class="n">90</td><td class="n">100</td><td class="n">100</td></tr>
+    <tr><td class="noc">21210</td><td class="occ">Mathematicians, statisticians and actuaries</td><td class="n">210</td><td class="n">190</td><td class="n">180</td><td class="n">170</td><td class="n">160</td><td class="n">170</td><td class="n">160</td><td class="n">150</td><td class="n">150</td><td class="n">160</td><td class="n">140</td><td class="n">150</td></tr>
+    <tr><td class="noc">22220</td><td class="occ">Computer network and web technicians</td><td class="n">430</td><td class="n">430</td><td class="n">420</td><td class="n">430</td><td class="n">440</td><td class="n">460</td><td class="n">510</td><td class="n">480</td><td class="n">470</td><td class="n">470</td><td class="n">470</td><td class="n">490</td></tr>
+    <tr><td class="noc">22222</td><td class="occ">Information systems testing technicians</td><td class="n">470</td><td class="n">460</td><td class="n">480</td><td class="n">460</td><td class="n">460</td><td class="n">440</td><td class="n">460</td><td class="n">450</td><td class="n">450</td><td class="n">420</td><td class="n">400</td><td class="n">360</td></tr>
+    <tr><td class="noc">22221</td><td class="occ">User support technicians</td><td class="n">2780</td><td class="n">2770</td><td class="n">2750</td><td class="n">2730</td><td class="n">2710</td><td class="n">2700</td><td class="n">2710</td><td class="n">2580</td><td class="n">2590</td><td class="n">2620</td><td class="n">2580</td><td class="n">2870</td></tr>
+    <tr><td class="noc">20012</td><td class="occ">Computer and information systems managers</td><td class="n">1730</td><td class="n">1810</td><td class="n">1820</td><td class="n">1830</td><td class="n">1900</td><td class="n">1940</td><td class="n">2000</td><td class="n">2000</td><td class="n">2010</td><td class="n">2140</td><td class="n">2170</td><td class="n">2240</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tcap">Read down a row, not across it: because the counts are unadjusted, a summer month
+    and a winter month differ for seasonal reasons before any hiring signal. The comparable reading is
+    the same month of the previous year, which is what the first table prints. Nothing in this table is
+    a projection.</p>
+</div></section>
+
+<!-- 03 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">03</div><div>
+    <h2>What this page counts, and what it does not</h2>
+  </div></div>
+  <ul class="limits">
+    <li><b>One programme, one table.</b> Everything above comes from a single Statistics Canada
+      table, <span class="mono">14-10-0455</span>, from the Employment Insurance Statistics programme
+      and published under the <a href="https://www.statcan.gc.ca/en/reference/licence">Statistics Canada Open Licence</a>. The CSV read here
+      (<span class="mono">14100455.csv</span>, unpacked from <span class="mono">14100455-eng.zip</span>) hashes to
+      <span class="mono">87fda59b15269de99e3f6b5f631a50bce412a225b8a36ddf92bffbc13d3a31cf</span>; <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410045501">the table page</a> and
+      <a href="https://www150.statcan.gc.ca/n1/tbl/csv/14100455-eng.zip">the download</a> are where a reader can confirm every figure.</li>
+    <li><b>A claimant, not an announcement.</b> This is the administrative count of people actually
+      drawing regular benefits. It is a different thing from the number of layoffs a company announces,
+      because a separation only lands here once it happens and the person qualifies and applies. The
+      page therefore lags the news, and undercounts it.</li>
+    <li><b>Counted under the last job, not the current one.</b> A claimant is filed under the
+      occupation of the work they lost. Someone retraining into a different field still counts under
+      the old one, so this is a reading of where job losses landed, not of who is in the field now.</li>
+    <li><b>Small numbers move a lot.</b> Several of these occupations number in the low hundreds
+      nationally, so a month-to-month change of a few dozen people is noise as much as signal. Compare
+      the same month across years and treat the direction, not the single reading.</li>
+    <li><b>Unadjusted for season.</b> The programme publishes raw monthly counts, so winter is
+      routinely higher than summer for reasons that have nothing to do with a particular occupation. No
+      seasonal adjustment has been applied here or anywhere on this page.</li>
+    <li><b>A snapshot, and not advice.</b> The table describes occupations and a country, not an
+      employer or a job ad, and nothing on it is guidance of any kind. Whatever is inside the paid
+      document, it is not the source of anything printed here.</li>
+  </ul>
+  <div class="pull">
+    <p>The demand side of the same question &mdash; what employers <em>are</em> hiring for &mdash; is on
+      the <a href="../tech-vacancies-by-occupation/">vacancy page</a>, and the decade ahead on the
+      <a href="../tech-job-projections/">projection page</a>. Read together, the three say how many of
+      a role are open, how many of it the government expects, and how many of it have just come
+      loose. The whole of the figures above is that one open-licensed file, reproduced with the
+      attribution the licence asks for.</p>
+  </div>
+</div></section>
+
+<!-- 04 -->
+<section><div class="wrap">
+  <div class="sec-head"><div class="sec-num">04</div><div>
+    <h2>Where this sits</h2>
+    <p class="lede" style="margin-top:12px">This page is the exit side of the market. What the same
+      roles pay, how many are open, and what the screen asks are the pages beside it.</p>
+  </div></div>
+  <p style="color:#CFCBC1;font-size:14.5px;margin-bottom:22px">Paid wages by occupation:
+    <a href="../tech-salaries/">tech salaries across Canada &rarr;</a> &middot; the same roles by urban
+    region: <a href="../tech-salaries-by-city/">tech salaries by city &rarr;</a> &middot; the file's
+    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; what
+    employers are trying to fill, by industry: <a href="../job-vacancies-by-industry/">job vacancies by industry &rarr;</a> &middot; the same demand by occupation: <a href="../tech-vacancies-by-occupation/">tech job vacancies by occupation &rarr;</a> &middot; the decade ahead: <a href="../tech-job-projections/">projected technical job openings to 2033 &rarr;</a></p>
+  <div class="two">
+    <div class="free">
+      <div class="kicker">Free &middot; no email</div>
+      <h3 style="margin-top:10px">The Screen Report</h3>
+      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">What the postings on the other side
+        of this market actually asked, and every salary band they printed.</p>
+      <a class="btn ghost" href="../free-report/">Read the Screen Report &rarr;</a>
+    </div>
+    <div class="paid">
+      <div class="paid-head"><h3>The First Pass pack</h3><span class="p mono">$24 CAD</span></div>
+      <p style="padding:14px 18px;margin:0;font-size:14.5px;color:#CFCBC1">Whichever way the counts
+        above are moving, the rest of the search is the same: a keyword map for the role, an answer
+        shape for every screening question, three salary scripts and a Canadian negotiation section,
+        in 21 pages.</p>
+      <p style="padding:12px 18px;margin:0;border-top:1px solid var(--rule);font-size:13.5px"><a href="../whats-in-the-pack/">The pack, section by section &rarr;</a></p>
+      <div class="paid-foot">
+        <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
+        <span class="mono" style="color:var(--muted);font-size:11.5px">One PDF &middot; $24 CAD, paid once</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="mono">FIRST PASS &middot; sixteen technical occupations, read 9 October 2026 &middot; <a href="../" style="border-bottom:0">the full page</a> &middot; <a href="../free-report/" style="border-bottom:0">the Screen Report</a></div>
+  <div class="fnote">Employment insurance figures are reproduced from Statistics Canada's
+    <em>Employment Insurance Statistics</em>, published under the <a href="https://www.statcan.gc.ca/en/reference/licence">Statistics Canada Open Licence</a>;
+    this page carries that information with attribution and is neither endorsed by nor affiliated with
+    Statistics Canada. Questions, refunds or corrections:
+    <a href="mailto:maxhemmerich@gmail.com">maxhemmerich@gmail.com</a>. No tracking of individuals, no cookies and no personal data on this site. Page views are counted in aggregate &mdash; one number per page, no identifier.</div>
+</div></footer>
+
+<script>
+const CHECKOUT_URL = "https://maxhemmerich.gumroad.com/l/yolqdo";   // same single slot as the other pages.
+const CONTACT = "maxhemmerich@gmail.com";
+
+(function () {
+  const live = typeof CHECKOUT_URL === "string" && CHECKOUT_URL.trim().length > 0;
+  document.querySelectorAll("[data-buy]").forEach(function (b) {
+    const cls = b.getAttribute("class") || "btn";
+    let replacement;
+    if (live) {
+      replacement = document.createElement("a");
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.href = CHECKOUT_URL.trim();
+      replacement.target = "_blank";
+      replacement.rel = "noopener";
+      replacement.textContent = "Get the pack \u2014 $24 CAD";
+    } else {
+      replacement = document.createElement("button");
+      replacement.type = "button";
+      replacement.className = cls;
+      replacement.setAttribute("data-buy", "");
+      replacement.setAttribute("aria-disabled", "true");
+      replacement.disabled = true;
+      replacement.textContent = "Checkout not connected yet";
+    }
+    if (b.parentNode) { b.parentNode.replaceChild(replacement, b); }
+  });
+})();
+</script>
+<!-- ALPHA page counter (Abacus — one anonymous hit per load, no cookie, no identifier; reader at /stats/ -->
+<script>
+(function(){try{
+  fetch("https://abacus.jasoncameron.dev/hit/maxhemmerich.github.io/first-pass-ca-tech-layoffs", {mode:"no-cors",cache:"no-store",keepalive:true}).catch(function(){});
+}catch(e){}})();
+</script>
+</body>
+</html>

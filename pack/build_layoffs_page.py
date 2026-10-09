@@ -1,29 +1,33 @@
-"""Build /tech-vacancies-by-occupation/ — a fifth citable Canadian reference, from a *different*
-survey than the three salary pages: Statistics Canada's Job Vacancy and Wage Survey, table
-14-10-0444 (Statistics Canada Open Licence, CSV via the no-account WDS endpoint).
+"""Build /tech-layoffs/ — a seventh citable Canadian reference, from a *third* dataset again:
+Statistics Canada's table 14-10-0455, employment insurance beneficiaries (regular benefits) by
+province, territory and occupation, monthly (Statistics Canada Open Licence, CSV via the
+no-account WDS endpoint).
 
-Why this cut. The three salary pages rest on ESDC's open-data *Wages* file and answer what a role
-is *paid*. /job-vacancies-by-industry/ answers what employers are *trying to hire* on the industry
-axis. This page answers the same demand question on the other axis — occupation — and it does it
-for exactly the sixteen NOC 2021 unit groups the salary pages cover, so the two can be read side by
-side: what the job pays (the salary pages) against how many of it are open and what was offered for
-it (this page). It prints the file's own numbers and nothing else:
+Why this cut. The salary pages say what a role is paid (ESDC's *Wages* file). The two vacancy
+pages and /job-vacancies-by-industry/ say what employers are trying to fill (Statistics Canada's
+Job Vacancy and Wage Survey). /tech-job-projections/ says what the federal model expects over the
+decade (ESDC's COPS). None of them says what the *other* side of a search looks like: how many
+people in these occupations have already lost a job and are drawing the benefit that follows one.
+That is what this table counts — EI beneficiaries receiving regular income benefits, by the
+occupation of the claim — and it is a different programme's record from every source above.
 
-  * the sixteen technical unit groups, for the latest reference period the file carries:
-    job vacancies and the average offered hourly wage;
-  * the same sixteen unit groups' job vacancies, across the last four reference periods, so the
-    direction is visible without computing anything.
+It prints the file's own numbers and nothing else:
+
+  * the sixteen technical unit groups at the latest reference period the file carries: regular EI
+    beneficiaries in Canada, beside the same month one year earlier, so the direction is visible
+    without computing anything;
+  * the same sixteen unit groups month by month across the last twelve reference periods.
 
 Hard rules, the same as the siblings: every number on the page is a string copied out of the named
-CSV — nothing computed, converted, ranked or averaged here; the file's units (a count, an hourly
-dollar figure) are carried in the column headings, so each cell is the file's own string; a cell the
-file leaves empty renders as a dash; no content or figure from the paid pack.
+CSV — nothing computed, converted, ranked, summed or averaged here; the file's unit (persons) is
+carried in the column headings, so each cell is the file's own string; a cell the file leaves empty
+or suppresses renders as a dash; no content or figure from the paid pack.
 
-The CSV is large (roughly 1.2 GB) and carries 83 geographies, so the loader streams it and keeps
-only the Canada rows; nothing else is held.
+The CSV is large (roughly 440 MB) and carries 15 geographies and 824 occupation members, so the
+loader streams it and keeps only the Canada rows for the sixteen codes; nothing else is held.
 
 Run:
-  py -3.10 pack/build_vacancies_by_occupation_page.py <path-to-14100444.csv>
+  py -3.10 pack/build_layoffs_page.py <path-to-14100455.csv>
 """
 import csv, os, re, sys, hashlib, html as _html
 
@@ -31,23 +35,22 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SOURCE = {
     "publisher": "Statistics Canada",
-    "survey": "Job Vacancy and Wage Survey",
-    "table_title": ("Job vacancies and average offered hourly wage by occupation (unit group), "
-                    "quarterly, unadjusted for seasonality"),
-    "product_id": "14-10-0444",
-    "table_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410044401",
-    "wds_url": "https://www150.statcan.gc.ca/n1/wds/rest/getFullTableDownloadCSV/14100444/en",
-    "resource_url": "https://www150.statcan.gc.ca/n1/tbl/csv/14100444-eng.zip",
-    "resource_zip": "14100444-eng.zip",
-    "resource_csv": "14100444.csv",
+    "survey": "Employment Insurance Statistics",
+    "table_title": ("Employment insurance beneficiaries (regular benefits) by province, territory "
+                    "and occupation, monthly, unadjusted for seasonality"),
+    "product_id": "14-10-0455",
+    "table_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410045501",
+    "wds_url": "https://www150.statcan.gc.ca/n1/wds/rest/getFullTableDownloadCSV/14100455/en",
+    "resource_url": "https://www150.statcan.gc.ca/n1/tbl/csv/14100455-eng.zip",
+    "resource_zip": "14100455-eng.zip",
+    "resource_csv": "14100455.csv",
     "licence": "Statistics Canada Open Licence",
     "licence_url": "https://www.statcan.gc.ca/en/reference/licence",
     "read_date": "2026-10-09",
 }
 
-NOC_COL = "National Occupational Classification"
-# The same sixteen NOC 2021 unit groups the three salary pages cover: software, data, analytics, IT,
-# computer engineering. Codes are the file's own; titles are the file's own member names.
+OCC_COL = "Occupations"
+# The same sixteen NOC 2021 unit groups the salary, vacancy and projection pages cover.
 OCC = [
     ("21232", "Software developers and programmers"),
     ("21231", "Software engineers and designers"),
@@ -67,101 +70,107 @@ OCC = [
     ("20012", "Computer and information systems managers"),
 ]
 
-VAC = "Job vacancies"
-WAGE = "Average offered hourly wage"
-SERIES = 4                    # quarters of vacancies shown per occupation
-
+SERIES = 12                    # months of the claimant count shown per occupation
 CODE_RE = re.compile(r"\s*\[([^\]]+)\]\s*$")
 
 
+def sha256_stream(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        while True:
+            b = fh.read(1 << 20)
+            if not b:
+                break
+            h.update(b)
+    return h.hexdigest()
+
+
 def load_canada(path):
-    """Stream the (large) file and return only the Canada rows for the sixteen codes we print,
-    keyed by (date, code, statistic) -> record dict."""
-    csv.field_size_limit(10 ** 7)
+    """Stream the (large) file and keep the Canada rows of the sixteen codes only:
+    (date, code) -> (value, status)."""
     codes = {c for c, _ in OCC}
-    want_stats = {VAC, WAGE}
     keep = {}
-    total = 0
     with open(path, "r", encoding="utf-8-sig", newline="") as fh:
         rd = csv.reader(fh)
         hdr = next(rd)
-        i_date, i_geo, i_noc, i_stat, i_val = (hdr.index("REF_DATE"), hdr.index("GEO"),
-                                               hdr.index(NOC_COL), hdr.index("Statistics"),
-                                               hdr.index("VALUE"))
+        i_date, i_geo = hdr.index("REF_DATE"), hdr.index("GEO")
+        i_occ, i_val, i_st = hdr.index(OCC_COL), hdr.index("VALUE"), hdr.index("STATUS")
         for r in rd:
-            total += 1
             if r[i_geo] != "Canada":
                 continue
-            if r[i_stat] not in want_stats:
-                continue
-            m = CODE_RE.search(r[i_noc])
+            m = CODE_RE.search(r[i_occ])
             if not m or m.group(1) not in codes:
                 continue
-            keep[(r[i_date], m.group(1), r[i_stat])] = r[i_val]
-    return keep, total
+            keep[(r[i_date], m.group(1))] = (r[i_val], r[i_st])
+    return keep
 
 
 def cell(v):
-    v = (v or "").strip()
-    if not v:
+    """The file's own string, or a dash where the file is silent or suppresses the cell."""
+    val, status = v if v is not None else ("", "")
+    val = (val or "").strip()
+    if not val or status.strip().lower() == "x":
         return '<td class="n dim">&mdash;</td>'
-    return '<td class="n">%s</td>' % _html.escape(v)
+    return '<td class="n">%s</td>' % _html.escape(val)
 
 
 def main(path):
-    keep, total = load_canada(path)
-    HASH = hashlib.sha256(open(path, "rb").read()).hexdigest()
+    keep = load_canada(path)
+    HASH = sha256_stream(path)
 
-    dates = sorted({d for (d, _c, _s) in keep})
+    dates = sorted({d for (d, _c) in keep})
     latest = dates[-1]
+    y, mo = latest.split("-")
+    prior = "%d-%s" % (int(y) - 1, mo)          # the same month one year earlier
     series_dates = dates[-SERIES:]
 
-    # 01 — the sixteen unit groups, latest period: vacancies + offered wage
+    # 01 — the sixteen unit groups: latest month, and the same month a year earlier
     rows1 = []
     for code, title in OCC:
         rows1.append(
             '    <tr><td class="noc">%s</td><td class="occ">%s</td>%s%s</tr>'
             % (_html.escape(code), _html.escape(title),
-               cell(keep.get((latest, code, VAC))), cell(keep.get((latest, code, WAGE))))
+               cell(keep.get((latest, code))), cell(keep.get((prior, code))))
         )
 
-    # 02 — the same sixteen, vacancies across the last four periods
+    # 02 — the same sixteen, month by month
     rows2 = []
     for code, title in OCC:
-        cells = "".join(cell(keep.get((d, code, VAC))) for d in series_dates)
+        cells = "".join(cell(keep.get((d, code))) for d in series_dates)
         rows2.append(
             '    <tr><td class="noc">%s</td><td class="occ">%s</td>%s</tr>'
             % (_html.escape(code), _html.escape(title), cells)
         )
 
-    src_line = ("%s, <em>%s</em> (table %s), %s \u2014 %s. Read %s. SHA-256 "
-                "<span class=\"mono\">%s</span>." % (
-                    SOURCE["publisher"], SOURCE["survey"], SOURCE["product_id"],
-                    SOURCE["table_title"].lower(), SOURCE["licence"], SOURCE["read_date"], HASH))
+    src_line = ("%s, <em>%s</em> (%s) \\u2014 %s, %s. Read %s. SHA-256 "
+                "<span class=\\\"mono\\\">%s</span>." % (
+                    SOURCE["publisher"], SOURCE["table_title"], SOURCE["product_id"],
+                    SOURCE["survey"], SOURCE["licence"], SOURCE["read_date"], HASH))
 
     html = PAGE.format(
         TITLE=TITLE, DESC=DESC, ROWS1="\n".join(rows1), ROWS2="\n".join(rows2),
-        SOURCE_LINE=src_line, LATEST=latest, N=len(OCC), NSER=len(series_dates),
+        SOURCE_LINE=src_line, LATEST=latest, PRIOR=prior, N=len(OCC), NSER=len(series_dates),
         FIRST=series_dates[0], LAST=series_dates[-1],
         LIC_URL=SOURCE["licence_url"], TABLE_URL=SOURCE["table_url"],
         RES_URL=SOURCE["resource_url"], RES_ZIP=SOURCE["resource_zip"],
         RES_CSV=SOURCE["resource_csv"], HASH=HASH, PRODUCT=SOURCE["product_id"],
         PHEAD="".join('<th class="n">%s</th>' % d for d in series_dates),
     )
-    out = os.path.join(ROOT, "tech-vacancies-by-occupation", "index.html")
+    out = os.path.join(ROOT, "tech-layoffs", "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="") as fh:
         fh.write(html)
     print("wrote", out, len(html), "bytes")
-    print("csv rows scanned:", total, "sha256:", HASH)
-    print("occupation rows:", len(OCC), "series period(s):", series_dates)
+    print("sha256:", HASH)
+    print("occupation rows:", len(OCC), "latest:", latest, "prior:", prior)
+    print("series:", series_dates)
 
 
-TITLE = "Canadian job vacancies by technical occupation \u2014 the JVWS, occupation by occupation"
-DESC = ("Job vacancies and the average hourly wage offered, for the sixteen technical NOC 2021 unit "
-        "groups this site already covers by pay, taken from Statistics Canada's Job Vacancy and Wage "
-        "Survey (table 14-10-0444, Statistics Canada Open Licence). Every figure carries its source "
-        "and the date it was read.")
+TITLE = "Tech layoffs in Canada, counted \u2014 EI claimants by technical occupation"
+DESC = ("How many people in each Canadian technical occupation are drawing regular Employment "
+        "Insurance benefits, month by month, for the sixteen NOC 2021 unit groups this site covers \u2014 "
+        "from Statistics Canada's table 14-10-0455 (Statistics Canada Open Licence). Every figure "
+        "carries its source and the date it was read.")
 
 PAGE = """<!DOCTYPE html>
 <html lang="en-CA">
@@ -170,16 +179,16 @@ PAGE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{TITLE}</title>
 <meta name="description" content="{DESC}">
-<link rel="canonical" href="https://maxhemmerich.github.io/first-pass-ca/tech-vacancies-by-occupation/">
+<link rel="canonical" href="https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="First Pass">
 <meta property="og:title" content="{TITLE}">
 <meta property="og:description" content="{DESC}">
-<meta property="og:url" content="https://maxhemmerich.github.io/first-pass-ca/tech-vacancies-by-occupation/">
+<meta property="og:url" content="https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/">
 <meta property="og:locale" content="en_CA">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{TITLE}">
-<meta name="twitter:description" content="How many software, data, security and IT jobs are open in Canada, and what employers offered for them \u2014 from Statistics Canada's own survey.">
+<meta name="twitter:description" content="The other side of a Canadian tech job search, counted: how many people in each technical occupation are on regular EI benefits, month by month, from Statistics Canada.">
 <style>
   :root{{
     --bg:#0B0B0C; --panel:#131316; --panel2:#0F0F12;
@@ -269,8 +278,8 @@ PAGE = """<!DOCTYPE html>
 {{
   "@context": "https://schema.org",
   "@type": "Article",
-  "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-vacancies-by-occupation/#article",
-  "url": "https://maxhemmerich.github.io/first-pass-ca/tech-vacancies-by-occupation/",
+  "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/#article",
+  "url": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/",
   "headline": "{TITLE}",
   "description": "{DESC}",
   "inLanguage": "en-CA",
@@ -279,8 +288,8 @@ PAGE = """<!DOCTYPE html>
   "author": {{"@type": "Organization", "name": "First Pass"}},
   "publisher": {{"@type": "Organization", "name": "First Pass", "url": "https://maxhemmerich.github.io/first-pass-ca/"}},
   "isPartOf": {{"@type": "WebSite", "@id": "https://maxhemmerich.github.io/first-pass-ca/#website", "url": "https://maxhemmerich.github.io/first-pass-ca/", "name": "First Pass"}},
-  "mainEntityOfPage": {{"@type": "WebPage", "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-vacancies-by-occupation/"}},
-  "isBasedOn": {{"@type": "Dataset", "name": "Job Vacancy and Wage Survey, table 14-10-0444", "creator": {{"@type": "GovernmentOrganization", "name": "Statistics Canada"}}, "license": "{LIC_URL}", "url": "{TABLE_URL}"}}
+  "mainEntityOfPage": {{"@type": "WebPage", "@id": "https://maxhemmerich.github.io/first-pass-ca/tech-layoffs/"}},
+  "isBasedOn": {{"@type": "Dataset", "name": "Employment insurance beneficiaries (regular benefits) by province, territory and occupation, table 14-10-0455", "creator": {{"@type": "GovernmentOrganization", "name": "Statistics Canada"}}, "license": "{LIC_URL}", "url": "{TABLE_URL}"}}
 }}
 </script>
 </head>
@@ -296,95 +305,103 @@ PAGE = """<!DOCTYPE html>
 
 <!-- hero -->
 <section class="hero"><div class="wrap">
-  <div class="kicker">Canada &middot; Job Vacancy and Wage Survey &middot; by occupation</div>
-  <h1>Canada's technical job vacancies, <span>occupation by occupation</span></h1>
-  <p class="lede">The salary pages ask what a technical role <em>pays</em>. This one asks how many of
-    those roles are <em>open</em>, and what employers offered to fill them. It takes the sixteen
-    technical NOC 2021 unit groups this site already covers by pay and reads the other half of the
-    same question out of Statistics Canada's <b>Job Vacancy and Wage Survey</b> &mdash; a different
-    survey from the wage file &mdash; with the source and the read date on every figure.</p>
+  <div class="kicker">Canada &middot; Employment Insurance &middot; by occupation</div>
+  <h1>Canada's technical layoffs, <span>counted</span></h1>
+  <p class="lede">Every other reference on this site measures the market you are about to enter.
+    This one measures the people who have just left it. It is not a list of announced job cuts;
+    it is the benefit that follows one &mdash; the number of people in each technical occupation
+    drawing <b>regular Employment Insurance</b>, counted by Statistics Canada and broken out by the
+    occupation of the claim. The page prints, for the sixteen technical NOC 2021 unit groups this
+    lane covers, that count at the latest reference period and month by month across the year, each
+    figure the file's own, with the source and the date it was read.</p>
   <div class="facts mono">
-    <span>{N} occupation rows</span><span>quarterly, unadjusted</span><span>Statistics Canada</span><span>read 9 October 2026</span>
+    <span>{N} occupation rows</span><span>monthly, unadjusted</span><span>Statistics Canada</span><span>read 9 October 2026</span>
   </div>
 </div></section>
 
 <!-- 01 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">01</div><div>
-    <h2>The demand side, occupation by occupation</h2>
-    <p class="lede" style="margin-top:12px">Counts are numbers of jobs; the wage is the average
-      hourly rate employers advertised for those jobs, in Canadian dollars. Both are reproduced for
-      the latest reference period the survey publishes, <span class="mono">{LATEST}</span>, for the
-      sixteen technical unit groups this lane covers.</p>
+    <h2>The sixteen technical occupations, at the latest reading</h2>
+    <p class="lede" style="margin-top:12px">Each cell is a count of people, in Canada, receiving
+      regular Employment Insurance benefits on the reference date and recorded under that occupation.
+      Two columns are printed side by side &mdash; the newest month the file carries,
+      <span class="mono">{LATEST}</span>, and the same month a year earlier,
+      <span class="mono">{PRIOR}</span> &mdash; so the year-on-year direction is visible without
+      anyone having to subtract.</p>
   </div></div>
   <div class="scroll">
   <table>
-    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">Job vacancies</th><th class="n">Avg offered wage ($)</th></tr></thead>
-    <tbody id="vac-occupation">
+    <thead><tr><th>NOC</th><th>Occupation</th><th class="n">{LATEST} (persons)</th><th class="n">{PRIOR} (persons)</th></tr></thead>
+    <tbody id="ei-latest">
 {ROWS1}
     </tbody>
   </table>
   </div>
-  <p class="tcap">Source: {SOURCE_LINE} A vacancy is a job the employer is actively seeking to fill
-    from outside the organisation; the offered wage excludes overtime, tips, commissions and bonuses.
-    The wage column is what an employer advertised, not what a hire was later paid.</p>
+  <p class="tcap">Source: {SOURCE_LINE} A person is counted once per month under the occupation of
+    the job they last held; the series is not adjusted for season, so the same month in two different
+    years is the honest comparison, not two months side by side.</p>
 </div></section>
 
 <!-- 02 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">02</div><div>
-    <h2>The same sixteen, quarter by quarter</h2>
-    <p class="lede" style="margin-top:12px">The same unit groups' <span class="mono">Job vacancies</span>
-      across the last {NSER} reference periods the file carries
-      (<span class="mono">{FIRST}</span> to <span class="mono">{LAST}</span>). The survey's quarters
-      arrive one at a time, so this is the direction of travel as printed, not a forecast.</p>
+    <h2>The same sixteen, month by month</h2>
+    <p class="lede" style="margin-top:12px">Regular-benefit claimants in each of the sixteen unit
+      groups, at every reference period from <span class="mono">{FIRST}</span> to
+      <span class="mono">{LAST}</span> &mdash; the last {NSER} months the file carries. The column
+      headings are the file's own reference dates; a cell the file suppresses is a dash, not a zero.</p>
   </div></div>
   <div class="scroll">
   <table>
     <thead><tr><th>NOC</th><th>Occupation</th>{PHEAD}</tr></thead>
-    <tbody id="vac-occupation-series">
+    <tbody id="ei-series">
 {ROWS2}
     </tbody>
   </table>
   </div>
-  <p class="tcap">The file is quarterly and runs from 2015-01 onward, with the second and third
-    quarters of 2020 suspended. The four periods above are the most recent the file carries; none is a
-    projection. A period the file leaves blank for an occupation is shown as a dash, not as a zero.</p>
+  <p class="tcap">Read down a row, not across it: because the counts are unadjusted, a summer month
+    and a winter month differ for seasonal reasons before any hiring signal. The comparable reading is
+    the same month of the previous year, which is what the first table prints. Nothing in this table is
+    a projection.</p>
 </div></section>
 
 <!-- 03 -->
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">03</div><div>
-    <h2>What this page is, and what it is not</h2>
+    <h2>What this page counts, and what it does not</h2>
   </div></div>
   <ul class="limits">
-    <li><b>A single source.</b> Every row above is a string out of one Statistics Canada table,
-      <span class="mono">{PRODUCT}</span>, from the Job Vacancy and Wage Survey and published under the
-      <a href="{LIC_URL}">Statistics Canada Open Licence</a>. The CSV read here
+    <li><b>One programme, one table.</b> Everything above comes from a single Statistics Canada
+      table, <span class="mono">{PRODUCT}</span>, from the Employment Insurance Statistics programme
+      and published under the <a href="{LIC_URL}">Statistics Canada Open Licence</a>. The CSV read here
       (<span class="mono">{RES_CSV}</span>, unpacked from <span class="mono">{RES_ZIP}</span>) hashes to
       <span class="mono">{HASH}</span>; <a href="{TABLE_URL}">the table page</a> and
-      <a href="{RES_URL}">the download</a> are where a reader can confirm it.</li>
-    <li><b>Sixteen rows, chosen and named.</b> The occupations are the unit groups this lane covers,
-      picked to mirror the salary pages and listed by NOC code so the choice is visible. They are a
-      slice of the file's hundreds of occupations, not the whole labour market.</li>
-    <li><b>A vacancy is an unfilled post.</b> Statistics Canada counts a job only where the employer is
-      taking steps to recruit someone from outside the organisation to fill it, so a post that is filled,
-      or one nobody is chasing, is not counted. What the table reads is employer demand, not every
-      opening there is.</li>
-    <li><b>The wage is the advertised one.</b> The survey records the rate an employer posted, and the
-      lower end of a range where a range was published. What a hire is actually paid is a different
-      survey's question &mdash; the one the salary pages ask.</li>
-    <li><b>The quarters are not seasonally adjusted.</b> These are the survey's own raw quarterly
-      figures, so a July quarter and a January quarter are not like for like. Read them as counts on the
-      date printed.</li>
-    <li><b>Occupations and an economy, not a job ad.</b> Nothing here names an employer or a single
-      opening, and none of it is advice. No part of this page is drawn out of the paid pack.</li>
+      <a href="{RES_URL}">the download</a> are where a reader can confirm every figure.</li>
+    <li><b>A claimant, not an announcement.</b> This is the administrative count of people actually
+      drawing regular benefits. It is a different thing from the number of layoffs a company announces,
+      because a separation only lands here once it happens and the person qualifies and applies. The
+      page therefore lags the news, and undercounts it.</li>
+    <li><b>Counted under the last job, not the current one.</b> A claimant is filed under the
+      occupation of the work they lost. Someone retraining into a different field still counts under
+      the old one, so this is a reading of where job losses landed, not of who is in the field now.</li>
+    <li><b>Small numbers move a lot.</b> Several of these occupations number in the low hundreds
+      nationally, so a month-to-month change of a few dozen people is noise as much as signal. Compare
+      the same month across years and treat the direction, not the single reading.</li>
+    <li><b>Unadjusted for season.</b> The programme publishes raw monthly counts, so winter is
+      routinely higher than summer for reasons that have nothing to do with a particular occupation. No
+      seasonal adjustment has been applied here or anywhere on this page.</li>
+    <li><b>A snapshot, and not advice.</b> The table describes occupations and a country, not an
+      employer or a job ad, and nothing on it is guidance of any kind. Whatever is inside the paid
+      document, it is not the source of anything printed here.</li>
   </ul>
   <div class="pull">
-    <p>The survey's other axis is <a href="../job-vacancies-by-industry/">job vacancies industry by
-      industry</a>. Its vacancy-rate and payroll-employee measures for these occupations sit in the same
-      table and are left off here so each row lines up with the salary pages. Statistics Canada publishes
-      the CSV for reuse with attribution; the links above are the whole source.</p>
+    <p>The demand side of the same question &mdash; what employers <em>are</em> hiring for &mdash; is on
+      the <a href="../tech-vacancies-by-occupation/">vacancy page</a>, and the decade ahead on the
+      <a href="../tech-job-projections/">projection page</a>. Read together, the three say how many of
+      a role are open, how many of it the government expects, and how many of it have just come
+      loose. The whole of the figures above is that one open-licensed file, reproduced with the
+      attribution the licence asks for.</p>
   </div>
 </div></section>
 
@@ -392,29 +409,29 @@ PAGE = """<!DOCTYPE html>
 <section><div class="wrap">
   <div class="sec-head"><div class="sec-num">04</div><div>
     <h2>Where this sits</h2>
-    <p class="lede" style="margin-top:12px">This page is the demand half, by occupation. What the
-      same roles pay, cut three ways, is on the salary pages; what employers asked and how to answer
-      is the free report and the pack.</p>
+    <p class="lede" style="margin-top:12px">This page is the exit side of the market. What the same
+      roles pay, how many are open, and what the screen asks are the pages beside it.</p>
   </div></div>
   <p style="color:#CFCBC1;font-size:14.5px;margin-bottom:22px">Paid wages by occupation:
     <a href="../tech-salaries/">tech salaries across Canada &rarr;</a> &middot; the same roles by urban
     region: <a href="../tech-salaries-by-city/">tech salaries by city &rarr;</a> &middot; the file's
-    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; the
-    demand side by industry: <a href="../job-vacancies-by-industry/">job vacancies by industry &rarr;</a> &middot; the decade ahead: <a href="../tech-job-projections/">projected technical job openings to 2033 &rarr;</a> &middot; the same sixteen leaving, from Statistics Canada's EI counts: <a href="../tech-layoffs/">tech layoffs, occupation by occupation &rarr;</a></p>
+    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; what
+    employers are trying to fill, by industry: <a href="../job-vacancies-by-industry/">job vacancies by industry &rarr;</a> &middot; the same demand by occupation: <a href="../tech-vacancies-by-occupation/">tech job vacancies by occupation &rarr;</a> &middot; the decade ahead: <a href="../tech-job-projections/">projected technical job openings to 2033 &rarr;</a></p>
   <div class="two">
     <div class="free">
       <div class="kicker">Free &middot; no email</div>
       <h3 style="margin-top:10px">The Screen Report</h3>
-      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">The measured other half of a search:
-        the screening questions the postings asked, and every salary band they printed.</p>
-      <a class="btn ghost" href="../free-report/">Open the free Screen Report &rarr;</a>
+      <p style="color:#CFCBC1;font-size:14.5px;margin-top:10px">What the postings on the other side
+        of this market actually asked, and every salary band they printed.</p>
+      <a class="btn ghost" href="../free-report/">Read the Screen Report &rarr;</a>
     </div>
     <div class="paid">
       <div class="paid-head"><h3>The First Pass pack</h3><span class="p mono">$24 CAD</span></div>
-      <p style="padding:14px 18px;margin:0;font-size:14.5px;color:#CFCBC1">The pack is the search built
-        on these numbers: a keyword map for each role, an answer shape for every screening question,
-        three salary scripts and a Canadian negotiation section, across 21 pages.</p>
-      <p style="padding:12px 18px;margin:0;border-top:1px solid var(--rule);font-size:13.5px"><a href="../whats-in-the-pack/">See what is inside, section by section &rarr;</a></p>
+      <p style="padding:14px 18px;margin:0;font-size:14.5px;color:#CFCBC1">Whichever way the counts
+        above are moving, the rest of the search is the same: a keyword map for the role, an answer
+        shape for every screening question, three salary scripts and a Canadian negotiation section,
+        in 21 pages.</p>
+      <p style="padding:12px 18px;margin:0;border-top:1px solid var(--rule);font-size:13.5px"><a href="../whats-in-the-pack/">The pack, section by section &rarr;</a></p>
       <div class="paid-foot">
         <a class="btn sm" data-buy href="https://maxhemmerich.gumroad.com/l/yolqdo" target="_blank" rel="noopener">Get the pack</a>
         <span class="mono" style="color:var(--muted);font-size:11.5px">One PDF &middot; $24 CAD, paid once</span>
@@ -425,8 +442,8 @@ PAGE = """<!DOCTYPE html>
 
 <footer><div class="wrap">
   <div class="mono">FIRST PASS &middot; sixteen technical occupations, read 9 October 2026 &middot; <a href="../" style="border-bottom:0">the full page</a> &middot; <a href="../free-report/" style="border-bottom:0">the Screen Report</a></div>
-  <div class="fnote">Vacancy figures are reproduced from Statistics Canada's <em>Job Vacancy and Wage
-    Survey</em>, which is published under the <a href="{LIC_URL}">Statistics Canada Open Licence</a>;
+  <div class="fnote">Employment insurance figures are reproduced from Statistics Canada's
+    <em>Employment Insurance Statistics</em>, published under the <a href="{LIC_URL}">Statistics Canada Open Licence</a>;
     this page carries that information with attribution and is neither endorsed by nor affiliated with
     Statistics Canada. Questions, refunds or corrections:
     <a href="mailto:maxhemmerich@gmail.com">maxhemmerich@gmail.com</a>. No tracking of individuals, no cookies and no personal data on this site. Page views are counted in aggregate &mdash; one number per page, no identifier.</div>
@@ -469,5 +486,5 @@ const CONTACT = "maxhemmerich@gmail.com";
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        raise SystemExit("usage: build_vacancies_by_occupation_page.py <path-to-14100444.csv>")
+        raise SystemExit("usage: build_layoffs_page.py <path-to-14100455.csv>")
     main(sys.argv[1])

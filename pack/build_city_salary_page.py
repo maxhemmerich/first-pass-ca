@@ -435,6 +435,9 @@ PAGE = """<!DOCTYPE html>
     the federal projection model expects for the same sixteen roles, with the shortage-or-surplus view it
     takes of each, are on
     <a href="../tech-job-projections/">projected technical job openings, 2024&ndash;2033 &rarr;</a></p>
+  <p style="color:#CFCBC1;font-size:14.5px;margin-bottom:22px">And who has already left these same
+    roles, counted from the benefit that follows a job loss, is on
+    <a href="../tech-layoffs/">tech layoffs in Canada, by occupation &rarr;</a></p>
   <div class="two">
     <div class="free">
       <div class="kicker">Free to read &middot; no email</div>

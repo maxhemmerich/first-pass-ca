@@ -410,7 +410,7 @@ PAGE = """<!DOCTYPE html>
     <a href="../tech-salaries/">tech salaries across Canada &rarr;</a> &middot; the same roles by urban
     region: <a href="../tech-salaries-by-city/">tech salaries by city &rarr;</a> &middot; the file's
     average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; open
-    now, by occupation: <a href="../tech-vacancies-by-occupation/">job vacancies by occupation &rarr;</a></p>
+    now, by occupation: <a href="../tech-vacancies-by-occupation/">job vacancies by occupation &rarr;</a> &middot; the roles people have already left, from the EI programme's own count: <a href="../tech-layoffs/">tech layoffs, counted &rarr;</a></p>
   <div class="two">
     <div class="free">
       <div class="kicker">Free &middot; no email</div>

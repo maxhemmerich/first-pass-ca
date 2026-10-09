@@ -419,6 +419,9 @@ PAGE = """<!DOCTYPE html>
       the same sixteen roles' openings and job seekers to 2033, with the outlook the federal projection
       model assigns each, are on
       <a href="../tech-job-projections/">projected technical job openings, 2024&ndash;2033 &rarr;</a></p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">And the people already out of these same
+      roles, counted the same sixteen ways from the benefit that follows a job loss, are on
+      <a href="../tech-layoffs/">Canadian tech layoffs, counted &rarr;</a></p>
   </div></div>
   <div class="two">
     <div class="free">
