@@ -31,6 +31,7 @@ PAGES = [
     ("ats-keywords/index.html", "ats-keywords"),
     ("whats-in-the-pack/index.html", "whats-in-the-pack"),
     ("pack-sample/index.html", "pack-sample"),
+    ("buying/index.html", "buying"),
     ("stats/index.html", "stats"),
 ]
 
