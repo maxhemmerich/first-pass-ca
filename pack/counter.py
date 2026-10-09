@@ -37,6 +37,7 @@ PAGES = [
     ("tech-average-pay/index.html", "tech-average-pay"),
     ("job-vacancies-by-industry/index.html", "job-vacancies-by-industry"),
     ("tech-vacancies-by-occupation/index.html", "tech-vacancies-by-occupation"),
+    ("tech-job-projections/index.html", "tech-job-projections"),
     ("stats/index.html", "stats"),
 ]
 
