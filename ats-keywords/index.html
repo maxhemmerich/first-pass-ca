@@ -310,7 +310,7 @@
   <div class="fnote">This page is the measured keyword list from the same sample as the free Screen Report; it
     carries no content from the paid pack. Questions, refunds or corrections:
     <a href="mailto:maxhemmerich@gmail.com">maxhemmerich@gmail.com</a>. Corrections to the data are welcome and get
-    published in the next revision of the PDF. No tracking on this site. No cookies. No external requests.</div>
+    published in the next revision of the PDF. No tracking of individuals. No cookies. No personal data. Page views are counted in aggregate — one number per page, no identifier.</div>
 </div></footer>
 
 <script>
@@ -353,6 +353,12 @@ const CONTACT = "maxhemmerich@gmail.com";
     }
   });
 })();
+</script>
+<!-- ALPHA page counter (Abacus — one anonymous hit per load, no cookie, no identifier; reader at /stats/ -->
+<script>
+(function(){try{
+  fetch("https://abacus.jasoncameron.dev/hit/maxhemmerich.github.io/first-pass-ca-ats-keywords", {mode:"no-cors",cache:"no-store",keepalive:true}).catch(function(){});
+}catch(e){}})();
 </script>
 </body>
 </html>

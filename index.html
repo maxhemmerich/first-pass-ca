@@ -405,7 +405,7 @@
       <li>The PDF arrives from the checkout page the moment payment clears.</li>
       <li>It is updated when the data is re-collected; you get the new file at the same link.</li>
       <li>If the file is not what this page says it is, email and it is refunded.</li>
-      <li>No tracking on this site. No cookies. No external requests.</li>
+      <li>No tracking of individuals. No cookies. No personal data. Page views are counted in aggregate — one number per page, no identifier.</li>
     </ul>
   </div>
 </div></section>
@@ -501,6 +501,12 @@ const CONTACT = "maxhemmerich@gmail.com";
     }
   });
 })();
+</script>
+<!-- ALPHA page counter (Abacus — one anonymous hit per load, no cookie, no identifier; reader at /stats/ -->
+<script>
+(function(){try{
+  fetch("https://abacus.jasoncameron.dev/hit/maxhemmerich.github.io/first-pass-ca-home", {mode:"no-cors",cache:"no-store",keepalive:true}).catch(function(){});
+}catch(e){}})();
 </script>
 </body>
 </html>

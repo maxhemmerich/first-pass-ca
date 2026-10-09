@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First Pass — page view counts</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Internal: the anonymous per-page view count for the First Pass pages.">
+<style>
+  :root{--bg:#0B0B0C;--panel:#131316;--ink:#F2F0EA;--muted:#9A968C;--rule:#2A2A2F;--accent:#FFB020;
+        --mono:Consolas,'SF Mono',ui-monospace,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:'Segoe UI',-apple-system,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 20px 80px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-size:30px;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 28px;font-size:15px}
+  table{width:100%;border-collapse:collapse;border-top:1px solid var(--rule)}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--rule);font-size:14.5px}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .mono{font-family:var(--mono)}
+  td.n{text-align:right;color:var(--accent);font-size:16px}
+  td.k{color:var(--muted);font-size:12.5px}
+  a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+  a:hover{border-bottom-color:var(--accent)}
+  .fnote{color:var(--muted);font-size:12.5px;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Page view counts</h1>
+  <p class="lede">One anonymous hit per page load. No cookie, no identifier, no per-visitor data —
+    each row is a single integer read from Abacus (no account, no API key). Values refresh live on
+    load; the printed number is the reading at build time.</p>
+  <table>
+    <thead><tr><th>Page</th><th>Key</th><th style="text-align:right">Views</th></tr></thead>
+    <tbody>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/">/</a></td><td class="k mono">first-pass-ca-home</td><td class="n mono" data-slug="home">not yet</td></tr>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/free-report/">/free-report</a></td><td class="k mono">first-pass-ca-free-report</td><td class="n mono" data-slug="free-report">not yet</td></tr>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/ats-keywords/">/ats-keywords</a></td><td class="k mono">first-pass-ca-ats-keywords</td><td class="n mono" data-slug="ats-keywords">not yet</td></tr>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/whats-in-the-pack/">/whats-in-the-pack</a></td><td class="k mono">first-pass-ca-whats-in-the-pack</td><td class="n mono" data-slug="whats-in-the-pack">not yet</td></tr>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/pack-sample/">/pack-sample</a></td><td class="k mono">first-pass-ca-pack-sample</td><td class="n mono" data-slug="pack-sample">not yet</td></tr>
+    <tr><td class="p"><a href="https://maxhemmerich.github.io/first-pass-ca/stats/">/stats</a></td><td class="k mono">first-pass-ca-stats</td><td class="n mono" data-slug="stats">not yet</td></tr>
+    </tbody>
+  </table>
+  <p class="fnote">FIRST PASS · internal reader · not linked from the site and not in sitemap.xml.</p>
+</div>
+<script>
+(function(){
+  document.querySelectorAll("td.n[data-slug]").forEach(function(td){
+    var u="https://abacus.jasoncameron.dev/get/maxhemmerich.github.io/first-pass-ca-" + td.getAttribute("data-slug");
+    fetch(u,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){
+      if (j && typeof j.value === "number") td.textContent = j.value;
+    }).catch(function(){});
+  });
+})();
+</script>
+</body>
+</html>
