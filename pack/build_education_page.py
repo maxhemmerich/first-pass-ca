@@ -57,6 +57,9 @@ SOURCE = {
 }
 # sha256 of the downloaded archive (verified by sha256sum); overridden when the zip is passed in.
 ARCHIVE_SHA = "580a4dd827810947d42c8ac5b9e10327d8880e7e1c91cfe0208b7983a479c887"
+# sha256 of the unpacked CSV inside that archive (verified twice: by the streaming reader and by the
+# grep-filtered pass that produced the rows this builder reads).
+CSV_SHA = "f0b2d3e7385bdb411bcf309946e3a29d673bb2dcf3ac90078291bedf13f92ff5"
 
 # The same sixteen NOC 2021 unit groups the salary, vacancy, projection and layoff pages cover.
 OCC = [
@@ -159,10 +162,10 @@ def main(src, zippath=None):
         rows2.append('    <tr><td class="noc">%s</td><td class="occ">%s</td>%s</tr>'
                      % (_html.escape(code), _html.escape(title), cells))
 
-    src_line = ("%s, <em>%s</em> (%s) \u2014 %s, %s. Read %s. SHA-256 of the archive "
-                "<span class=\"mono\">%s</span>." % (
+    src_line = ("%s, <em>%s</em> (%s) \u2014 %s, %s. Read %s. CSV SHA-256 "
+                "<span class=\"mono\">%s</span>; archive SHA-256 <span class=\"mono\">%s</span>." % (
                     SOURCE["publisher"], SOURCE["table_title"], SOURCE["product_id"],
-                    SOURCE["survey"], SOURCE["licence"], SOURCE["read_date"], hash_))
+                    SOURCE["survey"], SOURCE["licence"], SOURCE["read_date"], CSV_SHA, hash_))
 
     html = PAGE.format(
         TITLE=TITLE, DESC=DESC, ROWS1="\n".join(rows1), ROWS2="\n".join(rows2),
@@ -171,7 +174,7 @@ def main(src, zippath=None):
         CHEAD="".join('<th class="n">%s</th>' % _html.escape(c) for c in CIPS),
         LIC_URL=SOURCE["licence_url"], TABLE_URL=SOURCE["table_url"],
         RES_URL=SOURCE["resource_url"], RES_ZIP=SOURCE["resource_zip"],
-        RES_CSV=SOURCE["resource_csv"], HASH=hash_, PRODUCT=SOURCE["product_id"],
+        RES_CSV=SOURCE["resource_csv"], HASH=hash_, CSVHASH=CSV_SHA, PRODUCT=SOURCE["product_id"],
     )
     out = os.path.join(ROOT, "tech-education", "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -392,7 +395,7 @@ PAGE = """<!DOCTYPE html>
       <span class="mono">{PRODUCT}</span>, from the 2021 Census of Population and published under the
       <a href="{LIC_URL}">Statistics Canada Open Licence</a>. The CSV read here
       (<span class="mono">{RES_CSV}</span>, unpacked from <span class="mono">{RES_ZIP}</span>) hashes to
-      the archive digest <span class="mono">{HASH}</span>; <a href="{TABLE_URL}">the table page</a> and
+      <span class="mono">{CSVHASH}</span> and the archive itself to <span class="mono">{HASH}</span>; <a href="{TABLE_URL}">the table page</a> and
       <a href="{RES_URL}">the download</a> are where a reader can confirm every figure.</li>
     <li><b>Counts, not rates.</b> The file prints counts of people; it does not print a share, and
       none is derived here. A reader who wants "the percentage with a degree" has to divide two
