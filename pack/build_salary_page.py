@@ -431,7 +431,7 @@ PAGE = """<!DOCTYPE html>
     published under the <a href="{LIC_URL}">Open Government Licence &ndash; Canada</a>. Contains information
     licensed under that licence. This page is not endorsed by or affiliated with ESDC.
     Questions, refunds or corrections: <a href="mailto:maxhemmerich@gmail.com">maxhemmerich@gmail.com</a>.
-    No tracking of individuals. No cookies. No personal data. Page views are counted in aggregate &mdash; one number per page, no identifier.</div>
+    No tracking of individuals, no cookies and no personal data on this site. Page views are counted in aggregate &mdash; one number per page, no identifier.</div>
 </div></footer>
 
 <script>
