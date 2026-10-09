@@ -33,6 +33,7 @@ PAGES = [
     ("pack-sample/index.html", "pack-sample"),
     ("buying/index.html", "buying"),
     ("tech-salaries/index.html", "tech-salaries"),
+    ("tech-salaries-by-city/index.html", "tech-salaries-by-city"),
     ("stats/index.html", "stats"),
 ]
 
