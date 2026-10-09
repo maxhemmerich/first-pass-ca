@@ -207,7 +207,7 @@ PAGE = """<!DOCTYPE html>
   h2{{font-size:clamp(24px,4.2vw,36px);line-height:1.12;letter-spacing:-.01em}}
   h3{{font-size:19px;line-height:1.25}}
   p{{margin:0 0 14px}}
-  .mono{{font-family:var(--mono);font-variant-numeric:tabular-nums}}
+  .mono{{font-family:var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}}
   .kicker{{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}}
 
   .bar{{position:sticky;top:0;z-index:20;background:rgba(11,11,12,.94);border-bottom:1px solid var(--rule)}}
@@ -402,6 +402,23 @@ PAGE = """<!DOCTYPE html>
     <h2>Where this fits the rest</h2>
     <p class="lede" style="margin-top:12px">This page is the benchmark. The other half of the salary question
       &mdash; what employers actually asked, and what to say back &mdash; is on the free report and in the pack.</p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">Want it by city instead of by province? The same
+      sixteen roles are cut across twenty urban economic regions, the file's own rows, on
+      <a href="../tech-salaries-by-city/">Canadian tech pay, city by city &rarr;</a></p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">Every table on this page is the file's median.
+      The file also carries an average for the same occupations, kept on its own page so the two are never read
+      as one column: <a href="../tech-average-pay/">the average hourly wage in the same file &rarr;</a></p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">The other side of a search is not a wage at
+      all. Which industries are advertising, how many jobs are open and what they offer, is on
+      <a href="../job-vacancies-by-industry/">Canada's job vacancies by industry &rarr;</a></p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">Those open roles, counted one occupation at a
+      time rather than one industry at a time, are on
+      <a href="../tech-vacancies-by-occupation/">Canadian tech vacancies, occupation by
+      occupation &rarr;</a></p>
+    <p style="margin-top:14px;font-size:14.5px;color:#CFCBC1">Looking forward instead of at one quarter,
+      the same sixteen roles' openings and job seekers to 2033, with the outlook the federal projection
+      model assigns each, are on
+      <a href="../tech-job-projections/">projected technical job openings, 2024&ndash;2033 &rarr;</a></p>
   </div></div>
   <div class="two">
     <div class="free">

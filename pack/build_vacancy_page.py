@@ -183,7 +183,7 @@ PAGE = """<!DOCTYPE html>
   h2{{font-size:clamp(24px,4.2vw,36px);line-height:1.12;letter-spacing:-.01em}}
   h3{{font-size:19px;line-height:1.25}}
   p{{margin:0 0 14px}}
-  .mono{{font-family:var(--mono);font-variant-numeric:tabular-nums}}
+  .mono{{font-family:var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}}
   .kicker{{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}}
 
   .bar{{position:sticky;top:0;z-index:20;background:rgba(11,11,12,.94);border-bottom:1px solid var(--rule)}}
@@ -389,7 +389,9 @@ PAGE = """<!DOCTYPE html>
   <p style="color:#CFCBC1;font-size:14.5px;margin-bottom:22px">Paid wages by occupation:
     <a href="../tech-salaries/">tech salaries across Canada &rarr;</a> &middot; the same roles by urban
     region: <a href="../tech-salaries-by-city/">tech salaries by city &rarr;</a> &middot; the file's
-    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a></p>
+    average column: <a href="../tech-average-pay/">average pay, by occupation &rarr;</a> &middot; the same
+    survey on its occupation axis: <a href="../tech-vacancies-by-occupation/">tech job vacancies by
+    occupation &rarr;</a> &middot; the federal projection model's look ahead: <a href="../tech-job-projections/">projected tech openings to 2033 &rarr;</a></p>
   <div class="two">
     <div class="free">
       <div class="kicker">Free &middot; no email</div>
