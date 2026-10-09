@@ -110,7 +110,9 @@ def render_stats():
             % (page_url(rel), rel[:-len("index.html")].rstrip("/"), key(slug), slug, shown)
         )
     body = "\n".join(rows)
-    html = STATS_HTML.replace("<!--ROWS-->", body).replace("__NS__", NS)
+    html = (STATS_HTML.replace("<!--ROWS-->", body)
+                     .replace("__NS__", NS)
+                     .replace("<!--COUNTER-->", snippet("stats")))
     out = os.path.join(ROOT, "stats", "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="") as fh:
@@ -170,6 +172,7 @@ STATS_HTML = """<!DOCTYPE html>
   });
 })();
 </script>
+<!--COUNTER-->
 </body>
 </html>
 """
